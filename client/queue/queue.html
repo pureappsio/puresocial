@@ -1,0 +1,42 @@
+<template name='queue'>
+
+{{#if onboardingProcess}}
+  {{#if userPostCreated}}
+  <div class='row'>
+    <div class="col-md-2"></div>
+    <div class="col-md-8 completed">
+      You should now see that you first post has been scheduled to be posted on your social media networks!
+      Now, simply click <a href="{{pathFor 'end'}}">here</a> to end this guide and start using the app :)
+    </div>
+    <div class="col-md-2"></div>
+  </div>
+  {{/if}}
+{{/if}}
+
+<h3>Queue</h3>
+
+<div class="row">
+  <div class="col-md-3">
+    <button id='generate-queue' class='btn btn-lg btn-block btn-primary'>Shuffle Queue</button>
+  </div>
+
+  <div class="col-md-3">
+    <button id='auto-post' class='btn btn-lg btn-block btn-primary'>Auto-Post Queue</button>
+  </div>
+
+</div>
+
+<div class="row">
+  <div class="col-md-4 column-title">Content</div>
+  <div class="col-md-2 column-title">Category</div>
+  <div class="col-md-3 column-title">Media</div>
+  <div class="col-md-2 column-title">Date</div>
+</div>
+
+<div>
+  {{#each queue}}
+    {{> queueElement}}
+  {{/each}}
+</div>
+
+</template>

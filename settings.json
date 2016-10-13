@@ -1,0 +1,25 @@
+{
+  "s3": {
+        "key": "",
+        "secret": "",
+        "bucket": "",
+        "region": ""
+    },
+   "twitterLocal": {
+   	  "consumer_key": "",
+   	  "consumer_secret": ""
+   },
+   "twitterOnline": {
+   	  "consumer_key": "",
+      "consumer_secret": ""
+   },
+   "facebookLocal": {
+   	  "appId": "",
+   	  "secret": ""
+   },
+   "facebookOnline": {
+   	  "appId": "",
+      "secret": ""
+   },
+   "bitlyToken": ""
+}

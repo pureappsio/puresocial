@@ -1,0 +1,15 @@
+<template name='queueElement'>
+
+<div class="row">
+  <div class="col-md-4">{{formatContent content}}</div>
+  <div class="col-md-2">{{getCategoryName category}}</div>
+  <div class="col-md-3">
+  {{#each media}}
+    {{> mediaItem}}
+  {{/each}}
+  </div>
+  <div class="col-md-2">{{formatDate date}}</div>
+  <div class="col-md-1"><button class='btn btn-primary post-queue'>Post</button></div>
+</div>
+
+</template>

@@ -1,0 +1,96 @@
+<template name='newPost'>
+
+{{#if onboardingProcess}}
+
+  {{#if userPostCreated}}
+  <div class='row'>
+    <div class="col-md-2"></div>
+    <div class="col-md-8 completed">
+      Awesome! Now simply go over to the <a href="{{pathFor 'queue'}}">Queue</a> page to check that your post has been scheduled.
+    </div>
+    <div class="col-md-2"></div>
+  </div>
+
+  {{else}}
+
+    {{#if userScheduleSet}}
+    <div class='row'>
+      <div class="col-md-2"></div>
+      <div class="col-md-8 helper">
+        The last step is now to create your first post! Simply enter the content of your post,
+        select the category & the desired social media networks, add a picture if needed, and just click on Save!
+      </div>
+      <div class="col-md-2"></div>
+    </div>
+  {{/if}}
+
+  {{/if}}
+
+{{/if}}
+
+<h3>Insert New Post in Library</h3>
+
+  <div class="row">
+    <div class='col-md-6'>
+      <div id='character-count-twitter'>Twitter: <span id='character-count'>140</span> characters left</div>
+      <textarea id='postContent' class="form-control" rows="3"></textarea>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class='col-md-6'>
+     <select class="form-control" id="postCategory">
+      {{#each getCategories}}
+        {{> categoryElement}}
+      {{/each}}
+     </select>
+    </div>
+  </div>
+
+  <div class="row">
+    {{#each socialMediaChoices}}
+      {{> socialMediaItem}}
+    {{/each}}
+  </div>
+
+  <div class='row'>
+    <div class='col-md-6'>
+
+      <div class="input-group">
+        <span class="input-group-btn">
+            <span class="btn btn-primary btn-file">
+                Browse&hellip; <input type="file" class='file_bag' multiple>
+            </span>
+        </span>
+        <input type="text" id='file-name' class="form-control" readonly>
+      </div>
+
+    </div>
+    <div class='col-md-1'>
+      <button class="upload btn btn-primary">Upload</button>
+    </div>
+    <div class='col-md-1'>
+      {{#each files}}
+        <p>{{percent_uploaded}}%</p>
+      {{/each}}
+    </div>
+      <!-- {{> upload_bootstrap formData=specificFormData callbacks=myCallbacks}} -->
+
+  </div>
+
+  {{#if imageUploaded}}
+  <div class='row'>
+    <div class='col-md-6'>
+      <img width='400px' src='{{uploadedImage}}'>
+    </div>
+  </div>
+  {{/if}}
+
+  <div class="row">
+    <div class='col-md-3'>
+      <button id='savePost' class="btn btn-primary">Save in Library</button>
+      <span id='confirm-add'></span>
+    </div>
+  </div>
+
+</template>

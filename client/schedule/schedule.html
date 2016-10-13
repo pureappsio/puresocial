@@ -1,0 +1,32 @@
+<template name='schedule'>
+
+{{#if onboardingProcess}}
+  {{#if userScheduleSet}}
+    <div class='row'>
+      <div class="col-md-3"></div>
+      <div class="col-md-6 completed">
+        Well done :) Now that your schedules are all set, you can go ahead and <a href="{{pathFor 'newPost'}}">create your first post</a>!
+      </div>
+      <div class="col-md-3"></div>
+    </div>
+  {{else}}
+    {{#if userAccountLinked}}
+    <div class='row'>
+      <div class="col-md-3"></div>
+      <div class="col-md-6 helper">
+        From this page, you can now set the schedule on which you want your posts to be automatically posted for you on your social media network.
+        Set your desired schedule for all categories & we'll continue your journey into the app :)
+      </div>
+      <div class="col-md-3"></div>
+    </div>
+    {{/if}}
+  {{/if}}
+{{/if}}
+
+<h3>Schedule</h3>
+
+{{#each getCategories}}
+  {{> scheduleElement}}
+{{/each}}
+
+</template>
