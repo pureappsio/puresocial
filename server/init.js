@@ -4,7 +4,7 @@ Meteor.startup(function () {
   SyncedCron.start();
 
   // SMTP
-  process.env.MAIL_URL = 'smtp://marcoschwartz:beyond08@smtp.sendgrid.net:587';
+  process.env.MAIL_URL = Meteor.settings.MAIL_URL;
 
   // Uploads
   UploadServer.init({
