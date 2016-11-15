@@ -1,0 +1,6 @@
+node_modules/
+.deploy_si/
+.deploy_demo/
+settings_prod.json
+.meteor/
+tests/
