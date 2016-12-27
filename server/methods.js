@@ -137,7 +137,7 @@ Meteor.methods({
     });
 
     // Regenerate queue
-    Meteor.call('generateQueue');
+    Meteor.call('generateQueue', Meteor.user());
 
   },
   getSchedule: function(category) {
@@ -188,6 +188,9 @@ Meteor.methods({
       }
       if (post.media[i].platform == 'Facebook Page') {
         Meteor.call('postOnFacebookPage', post, post.media[i].userName, Meteor.user());
+      }
+      if (post.media[i].platform == 'Facebook') {
+        Meteor.call('postOnFacebook', post, Meteor.user());
       }
     }
 
