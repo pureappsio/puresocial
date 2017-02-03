@@ -9,6 +9,15 @@ categories = [{name: 'blogPosts'},
 
 Meteor.methods({
 
+  addSocialTag: function(content) {
+
+    var urlRegex = /(https?:\/\/[^\s]+)/g;
+    var url = content.match(urlRegex);
+    content = content.replace(urlRegex, url + '?origin=social');
+
+    return content;
+    
+  },
   updateSocialMediaNames: function(user) {
 
     // Go through all library posts
@@ -114,6 +123,7 @@ Meteor.methods({
 		// Build post object
 		post.userId = Meteor.user()._id;
 		post.submitted = new Date();
+    console.log(post);
 
 		// Save in DB
 		var postId = Posts.insert(post);
@@ -179,6 +189,7 @@ Meteor.methods({
 
 	},
   postNow: function(post) {
+    
     console.log(post);
 
     // Post for each media

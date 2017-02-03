@@ -96,6 +96,9 @@ Meteor.methods({
 
     console.log('Posting on Twitter');
 
+    // Add social tag
+    post.content = Meteor.call('addSocialTag', post.content);
+
     // Find right token
     for (var j = 0; j < user.services.twitter.length; j++) {
 

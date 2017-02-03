@@ -33,8 +33,8 @@ Template.admin.events({
   'click #update-twitter': function() {
     Meteor.call('getAccountsNames', Meteor.user());
   },
-  'click #send-reminders': function() {
-    Meteor.call('sendReminders');
+  'click #test': function() {
+    Meteor.call('addSocialTag', 'Some text here with some link http://marcoschwartz.com/blog/stuff');
   },
   'click #update-social': function() {
     Meteor.call('updateSocialMediaNames', Meteor.user());
