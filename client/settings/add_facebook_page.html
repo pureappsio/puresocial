@@ -1,19 +1,13 @@
 <template name='addFacebookPage'>
-
-<h3>Link New Facebook Page</h3>
-
-<div class='row'>
-{{#each selectFacebookPages}}
-  {{> facebookPages}}
-{{/each}}
-</div>
-
-<div class='row'>
-<div class='col-md-4'>
-<a href="{{pathFor 'settings'}}">
-  <button class='btn btn-primary btn-lg'>Back to Settings</button>
-</a>
-</div>
-</div>
-
+    <h3>Link New Facebook Page</h3>
+    <div class='row'>
+        {{#each selectFacebookPages}} {{> facebookPages}} {{/each}}
+    </div>
+    <div class='row'>
+        <div class='col-md-4'>
+            <a href="{{pathFor 'settings'}}">
+                <button class='btn btn-primary btn-lg'>Back to Settings</button>
+            </a>
+        </div>
+    </div>
 </template>
