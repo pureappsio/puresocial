@@ -62,16 +62,16 @@ Meteor.methods({
     },
     postQueueItem: function(queue_item, user) {
 
-        // Which media?
-        var mediaPlatform = queue_item.media[0].platform;
-        var current_media_user = queue_item.media[0].userName;
-        console.log('Posting on ' + mediaPlatform + ' for user ' + current_media_user);
+        // Which service?
+        var service = Services.findOne(queue_item.serviceId);
+        console.log('Posting on ' + service.type);
+        console.log(queue_item);
 
         // Facebook profile
-        if (mediaPlatform == 'Facebook') {
+        if (service.type == 'facebook') {
 
             // Post on Facebook
-            Meteor.call('postOnFacebook', queue_item, user);
+            Meteor.call('postOnFacebook', queue_item);
 
             // Remove from queue
             Queues.remove(queue_item._id);
@@ -85,10 +85,10 @@ Meteor.methods({
         }
 
         // Facebook pages
-        if (mediaPlatform == 'Facebook Page') {
+        if (service.type == 'facebookPage') {
 
             // Post on Facebook
-            Meteor.call('postOnFacebookPage', queue_item, current_media_user, user);
+            Meteor.call('postOnFacebookPage', queue_item);
 
             // Remove from queue
             Queues.remove(queue_item._id);
@@ -102,10 +102,10 @@ Meteor.methods({
         }
 
         // Twitter
-        if (mediaPlatform == 'Twitter') {
+        if (service.type == 'twitter') {
 
             // Post on Twitter
-            Meteor.call('postOnTwitter', queue_item, current_media_user, user);
+            Meteor.call('postOnTwitter', queue_item);
 
             // Remove from queue
             Queues.remove(queue_item._id);
@@ -190,8 +190,6 @@ Meteor.methods({
 
             // Decompose posts by media
             var decomposedPosts = decomposePostsMedia(posts);
-            // console.log('Decomposed posts: ');
-            // console.log(decomposedPosts);
 
             // Make list of all media
             var mediaList = listAllMedia(decomposedPosts);
@@ -199,7 +197,7 @@ Meteor.methods({
             // Repeat for all media
             for (var k = 0; k < mediaList.length; k++) {
 
-                console.log('Current Media: ' + mediaList[k].userName);
+                console.log('Current Media: ' + mediaList[k]);
 
                 // Build categories schedules
                 reference_schedule = genCatSchedule(schedules);
@@ -211,9 +209,7 @@ Meteor.methods({
                 for (var i = 0; i < decomposedPosts.length; i++) {
 
                     // Check if it is the correct media
-                    if (mediaList[k].platform == decomposedPosts[i].media[0].platform && mediaList[k].userName == decomposedPosts[i].media[0].userName) {
-
-                        //console.log('Match');
+                    if (mediaList[k] == decomposedPosts[i].media) {
 
                         // Get category
                         var category = decomposedPosts[i].category;
@@ -225,12 +221,11 @@ Meteor.methods({
                         queue_item.userId = decomposedPosts[i].userId;
                         queue_item.content = decomposedPosts[i].content;
                         queue_item.category = decomposedPosts[i].category;
-                        queue_item.media = decomposedPosts[i].media;
+                        queue_item.serviceId = decomposedPosts[i].media;
+
                         if (decomposedPosts[i].picture) {
                             queue_item.picture = decomposedPosts[i].picture;
                         }
-
-                        //console.log(queue_item);
 
                         // Get next date for this category, or regenerate array
                         if (temporary_schedule[category].dates.length == 0) {
@@ -296,14 +291,15 @@ Meteor.methods({
                             if (queue_item.category == 'useOnce') {
 
                                 if (notInQueue(queue_item, user)) {
-                                    console.log('Adding to queue: ')
-                                    console.log(queue_item);
                                     var queueId = Queues.insert(queue_item);
                                 }
 
                             } else {
                                 var queueId = Queues.insert(queue_item);
                             }
+
+                            console.log('Adding to queue: ')
+                            console.log(queue_item);
 
 
                         }
@@ -338,22 +334,22 @@ Meteor.methods({
     }
 });
 
-function notInQueue(item, user) {
+// function notInQueue(item, user) {
 
-    // Get all queue elements for user
-    var queue = Queues.find({ userId: user._id }).fetch();
+//     // Get all queue elements for user
+//     var queue = Queues.find({ userId: user._id }).fetch();
 
-    var notInQueue = true;
+//     var notInQueue = true;
 
-    for (i = 0; i < queue.length; i++) {
-        if ((queue[i].content == item.content) && (queue[i].media[0].platform == item.media[0].platform)) {
-            notInQueue = false;
-        }
-    }
+//     for (i = 0; i < queue.length; i++) {
+//         if ((queue[i].content == item.content) && (queue[i].serviceId == item.media[0].platform)) {
+//             notInQueue = false;
+//         }
+//     }
 
-    return notInQueue;
+//     return notInQueue;
 
-}
+// }
 
 function shuffle(array) {
     var counter = array.length,
@@ -501,9 +497,7 @@ function decomposePostsMedia(posts) {
                 newPost.picture = posts[i].picture;
             }
 
-            newPost.media = posts[i].media;
-
-            newPost.media = [posts[i].media[j]];
+            newPost.media = posts[i].media[j];
             decomposed.push(newPost);
 
         }
@@ -515,21 +509,20 @@ function decomposePostsMedia(posts) {
 
 function listAllMedia(posts) {
 
-    var mediaList = [];
+    var medias = [];
 
-    for (var i = 0; i < posts.length; i++) {
+    for (i in posts) {
 
-        var media = posts[i].media[0];
+        var postMedia = posts[i].media;
 
-        var unique = true;
-        for (var j = 0; j < mediaList.length; j++) {
-            if (mediaList[j].platform == media.platform && mediaList[j].userName == media.userName) { unique = false; }
+        if (medias.indexOf(postMedia) == -1) {
+            medias.push(postMedia);
         }
-        if (unique) { mediaList.push(media); }
 
     }
 
-    return mediaList;
+    return medias;
+
 }
 
 function sortByMedia(posts) {

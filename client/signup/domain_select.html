@@ -1,0 +1,27 @@
+<template name="domainSelect">
+    <div class='row app-main'>
+        <div class='col-md-3'></div>
+        <div class='col-md-6 col-centered'>
+            <h3>Select your domain</h3>
+        </div>
+    </div>
+     <div class='row voffset30'>
+        <div class='col-md-3'></div>
+        <div class='col-md-6'>
+            <label for="domain">Domain</label>
+            <input placeholder='Your subdomain here ...' class='form-control input-lg' id='domain'>
+        </div>
+    </div>
+     <div class='row voffset15'>
+        <div class='col-md-3'></div>
+        <div class='col-md-6'>
+           Your students will access your courses at {{domainName}}.{{domain}}
+        </div>
+    </div>
+     <div class='row voffset15'>
+        <div class='col-md-3'></div>
+        <div class='col-md-6 '>
+            <button id='select' class='btn btn-lg btn-primary btn-block'>Select Domain</button>
+        </div>
+    </div>
+</template>

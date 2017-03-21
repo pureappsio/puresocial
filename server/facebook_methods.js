@@ -1,31 +1,86 @@
 import FacebookAPI from 'fbgraph';
+FacebookAPI.setVersion("2.8");
+
 import fs from 'fs';
 
 Meteor.methods({
 
-    deleteFacebookPage: function(account) {
+    userAddFacebookOauthCredentials: function(token, secret) {
 
-        // Update user profile
-        Meteor.users.update({ _id: Meteor.user()._id }, { $pull: { "services.facebookPages": account } }, function(error) {
-            if (error) { console.log(error); }
-        });
+        var service = Facebook.retrieveCredential(token, secret).serviceData;
+        service.userId = Meteor.user()._id;
+        service.type = 'facebook';
+
+        console.log('Facebook account data: ');
+        console.log(service);
+
+        // Check if exists
+        if (Services.findOne({ type: 'facebook', userId: Meteor.user()._id })) {
+
+            console.log('Already existing Facebook data');
+
+        } else {
+            Services.insert(service);
+        }
 
     },
-    deleteFacebookAccount: function(account) {
+    userAddFacebookPage: function(service) {
 
-        // Update user profile
-        Meteor.users.update({ _id: Meteor.user()._id }, { $pull: { "services.facebook": account } }, function(error) {
-            if (error) { console.log(error); }
-        });
+        service.userId = Meteor.user()._id;
+        service.type = 'facebookPage';
+
+        console.log(service);
+
+        // Check if exists
+        if (Services.findOne({ name: service.name, type: 'facebookPage', userId: Meteor.user()._id })) {
+
+            console.log('Already existing Facebook Page data');
+
+        } else {
+            Services.insert(service);
+        }
 
     },
-    postOnFacebook: function(post, user) {
+    getFacebookPages: function() {
 
         // Find token
-        var token = user.services.facebook[0].accessToken;
+        var service = Services.findOne({ type: 'facebook', userId: Meteor.user()._id })
+        var token = service.accessToken;
 
-        // Set token
-        FacebookAPI.setAccessToken(token);
+        console.log('Getting facebook Pages');
+
+        // Get pages
+        var pages = Async.runSync(function(done) {
+            FacebookAPI.get("me/accounts?access_token=" + token, function(err, res) {
+
+                if (err) { console.log(err); }
+                console.log(res.data);
+                done(null, res.data);
+            });
+        });
+
+        return pages.result;
+
+    },
+
+    deleteFacebookPage: function(serviceId) {
+
+        Services.remove(serviceId)
+
+    },
+    deleteFacebookAccount: function(serviceId) {
+
+        // Update user profile
+        Services.remove(serviceId)
+
+    },
+    postOnFacebook: function(post) {
+
+        // Find token
+        var service = Services.findOne(post.serviceId)
+        var token = service.accessToken;
+
+        console.log(token);
 
         // Add social tag
         post.content = Meteor.call('addSocialTag', post.content);
@@ -42,7 +97,7 @@ Meteor.methods({
                 message: post.content
             };
 
-            FacebookAPI.post('me/photos', pictureData, function(err, res) {
+            FacebookAPI.post('me/photos?access_token=' + token, pictureData, function(err, res) {
 
                 // Returns the post id
                 console.log(res); // { id: xxxxx}
@@ -72,25 +127,21 @@ Meteor.methods({
             }
 
             // Post on FB
-            FacebookAPI.post("me/feed", wallPost, function(err, res) {
+            FacebookAPI.post("me/feed?access_token=" + token, wallPost, function(err, res) {
                 // returns the post id
                 console.log(res); // { id: xxxxx}
             });
         }
 
     },
-    postOnFacebookPage: function(post, page, user) {
+    postOnFacebookPage: function(post) {
 
-        // Find right token
-        for (var j = 0; j < user.services.facebookPages.length; j++) {
-            if (user.services.facebookPages[j].name == page) {
-                var pageId = user.services.facebookPages[j].id;
-                var token = user.services.facebookPages[j].access_token;
-            }
-        }
+        // Get token and page ID        
+        var service = Services.findOne(post.serviceId);
+        var token = service.access_token;
+        var pageId = service.id;
 
-        // Set token
-        FacebookAPI.setAccessToken(token);
+        console.log(service);
 
         // Add social tag
         post.content = Meteor.call('addSocialTag', post.content);
@@ -107,9 +158,10 @@ Meteor.methods({
                 message: post.content
             };
 
-            FacebookAPI.post(pageId + "/photos", pictureData, function(err, res) {
+            FacebookAPI.post(pageId + "/photos?access_token=" + token, pictureData, function(err, res) {
 
                 // Returns the post id
+                if (err) { console.log(err); }
                 console.log(res); // { id: xxxxx}
 
             });
@@ -120,7 +172,7 @@ Meteor.methods({
             var isLinkPresent = Meteor.call('isLinkPresent', post.content);
 
             if (isLinkPresent) {
-                
+
                 var url = Meteor.call('linkify', post.content);
 
                 // Post
@@ -138,8 +190,9 @@ Meteor.methods({
             }
 
             // Post on FB
-            FacebookAPI.post(pageId + "/feed", wallPost, function(err, res) {
+            FacebookAPI.post(pageId + "/feed?access_token=" + token, wallPost, function(err, res) {
                 // returns the post id
+                if (err) { console.log(err); }
                 console.log(res); // { id: xxxxx}
             });
         }

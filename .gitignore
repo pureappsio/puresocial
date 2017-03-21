@@ -1,6 +1,5 @@
 node_modules/
-.deploy_si/
-.deploy_demo/
+.deploy_*
 settings_prod.json
 .meteor/
 tests/

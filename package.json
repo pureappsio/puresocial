@@ -1,25 +1,26 @@
 {
-  "name": "open-edgar",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "directories": {
-    "test": "tests"
-  },
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://marcoschwartz@bitbucket.org/marcoschwartz/social-bot.git"
-  },
-  "author": "Marco Schwartz <marcolivier.schwartz@gmail.com> (http://www.marcoschwartz.com/)",
-  "license": "ISC",
-  "homepage": "https://bitbucket.org/marcoschwartz/social-bot#readme",
-  "dependencies": {
-    "babel-runtime": "^6.20.0",
-    "bcrypt": "^0.8.7",
-    "fbgraph": "*",
-    "twitter": "*"
-  }
+    "name": "puresocial",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "directories": {
+        "test": "tests"
+    },
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://marcoschwartz@bitbucket.org/marcoschwartz/social-bot.git"
+    },
+    "author": "Marco Schwartz <marcolivier.schwartz@gmail.com> (http://www.marcoschwartz.com/)",
+    "license": "ISC",
+    "homepage": "https://bitbucket.org/marcoschwartz/social-bot#readme",
+    "dependencies": {
+        "babel-runtime": "^6.20.0",
+        "bcrypt": "^0.8.7",
+        "bootstrap": "^4.0.0-alpha.6",
+        "fbgraph": "*",
+        "twitter": "*"
+    }
 }

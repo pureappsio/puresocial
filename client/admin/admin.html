@@ -1,43 +1,28 @@
 <template name='admin'>
-
-{{#if isAdmin}}
-
-<h3>Admin Panel</h3>
-
-<div class='row'>
-	<div class='col-md-3'>Total number of users: </div>
-	<div class='col-md-1'>{{getTotalUsers}}</div>
-
-	<div class='col-md-2'>Active users: </div>
-	<div class='col-md-1'>{{getTotalActiveUsers}}</div>
-
-	<div class='col-md-2'>Active/Total ratio: </div>
-	<div class='col-md-1'>{{getActiveTotalRatio}}%</div>
-</div>
-
-<h3>Users</h3>
-
-<div class='row'>
-  <div class='col-md-3 column-title'>Username</div>
-	<div class='col-md-2 column-title'>Posts</div>
-	<div class='col-md-2 column-title'>Queues</div>
-	<div class='col-md-2 column-title'>Accounts</div>
-</div>
-
-{{#each listAllUsers}}
-  {{> userDetails}}
-{{/each}}
-
-<div class='row'>
-  <!-- <div class='col-md-3'><button id='update-twitter' class='btn btn-primary'>Update Twitter Accounts</button></div>
-  <div class='col-md-3'><button id='update-social' class='btn btn-primary'>Update Social Media Names</button></div> -->
-	<div class='col-md-3'><button id='test' class='btn btn-primary'>Test</button></div>
-</div>
-
-{{else}}
-
-<h3>Sorry, you are not authorized to see this page.</h3>
-
-{{/if}}
-
+    {{#if isAdmin}}
+    <h3>Admin Panel</h3>
+    <div class='row'>
+        <div class='col-md-3'>Total number of users: </div>
+        <div class='col-md-1'>{{getTotalUsers}}</div>
+        <div class='col-md-2'>Active users: </div>
+        <div class='col-md-1'>{{getTotalActiveUsers}}</div>
+        <div class='col-md-2'>Active/Total ratio: </div>
+        <div class='col-md-1'>{{getActiveTotalRatio}}%</div>
+    </div>
+    <h3>Users</h3>
+    <div class='row'>
+        <div class='col-md-3 column-title'>Username</div>
+        <div class='col-md-2 column-title'>Posts</div>
+        <div class='col-md-2 column-title'>Queues</div>
+        <div class='col-md-2 column-title'>Accounts</div>
+    </div>
+    {{#each listAllUsers}} {{> userDetails}} {{/each}}
+    <div class='row'>
+        <div class='col-md-3'><button id='test' class='btn btn-primary'>API Test</button></div>
+        <div class='col-md-3'>
+            <button id='test' class='btn btn-primary'>Test</button>
+        </div>
+    </div>
+    {{else}}
+    <h3>Sorry, you are not authorized to see this page.</h3> {{/if}}
 </template>

@@ -83,73 +83,38 @@ Meteor.methods({
         });
 
     },
-    userAddFacebookOauthCredentials: function(token, secret) {
+    // updateFacebookPagesTokens: function() {
 
-        var data = Facebook.retrieveCredential(token, secret).serviceData;
-        console.log(data);
+    //     // Find token
+    //     var service = Services.findOne({ type: 'facebook', userId: Meteor.user()._id })
+    //     var token = service.accessToken;
 
-        Meteor.users.update({ _id: Meteor.user()._id }, { $push: { "services.facebook": data } }, function(error) {
-            if (error) { console.log(error); }
-        });
-    },
-    userAddFacebookPage: function(data) {
+    //     // Set token
+    //     FacebookAPI.setAccessToken(token);
 
-        console.log(data);
+    //     // Get pages
+    //     var pages = Async.runSync(function(done) {
+    //         FacebookAPI.get("me/accounts", function(err, res) {
+    //             done(null, res.data);
+    //         });
+    //     });
 
-        Meteor.users.update({ _id: Meteor.user()._id }, { $push: { "services.facebookPages": data } }, function(error) {
-            if (error) { console.log(error); }
-        });
+    //     var newPages = pages.result;
+    //     var pages = Meteor.user().services.facebookPages;
 
-    },
-    getFacebookPages: function() {
+    //     for (i in pages) {
 
-        // Find token
-        var token = Meteor.user().services.facebook[0].accessToken;
+    //         for (n in newPages) {
+    //             if (newPages[n].id == pages[i].id) {
+    //                 pages[i] = newPages[n];
+    //             }
+    //         }
+    //     }
 
-        // Set token
-        FacebookAPI.setAccessToken(token);
+    //     // Update tokens
+    //     Meteor.users.update(Meteor.user()._id, { $set: { "services.facebookPages": pages } })
 
-        // Get pages
-        var pages = Async.runSync(function(done) {
-            FacebookAPI.get("me/accounts", function(err, res) {
-                done(null, res.data);
-            });
-        });
-
-        return pages.result;
-
-    },
-    updateFacebookPagesTokens: function() {
-
-        // Find token
-        var token = Meteor.user().services.facebook[0].accessToken;
-
-        // Set token
-        FacebookAPI.setAccessToken(token);
-
-        // Get pages
-        var pages = Async.runSync(function(done) {
-            FacebookAPI.get("me/accounts", function(err, res) {
-                done(null, res.data);
-            });
-        });
-
-        var newPages = pages.result;
-        var pages = Meteor.user().services.facebookPages;
-
-        for (i in pages) {
-
-            for (n in newPages) {
-                if (newPages[n].id == pages[i].id) {
-                   pages[i] = newPages[n];
-                }
-            }
-        }
-
-        // Update tokens
-        Meteor.users.update(Meteor.user()._id, {$set: { "services.facebookPages": pages }})
-
-    },
+    // },
     saveNewPost: function(post) {
 
         // Build post object

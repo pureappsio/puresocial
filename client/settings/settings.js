@@ -1,10 +1,10 @@
 Template.settings.events({
 
-    'click #update-tokens': function() {
+    // 'click #update-tokens': function() {
 
-        Meteor.call('updateFacebookPagesTokens');
+    //     Meteor.call('updateFacebookPagesTokens');
 
-    },
+    // },
     'click #save-timezone': function() {
 
         // Get user choice
@@ -19,7 +19,7 @@ Template.settings.events({
     },
     'click #link-twitter': function() {
 
-        Twitter.requestCredential({ requestPermissions: Accounts.ui._options.requestPermissions["twitter"] }, function(token) {
+        Twitter.requestCredential({ requestPermissions: [] }, function(token) {
 
             var secret = Package.oauth.OAuth._retrieveCredentialSecret(token);
 
@@ -31,7 +31,7 @@ Template.settings.events({
     },
     'click #link-facebook': function() {
 
-        Facebook.requestCredential({ requestPermissions: Accounts.ui._options.requestPermissions["facebook"] }, function(token) {
+        Facebook.requestCredential({ requestPermissions: ['publish_pages', 'manage_pages'] }, function(token) {
 
             var secret = Package.oauth.OAuth._retrieveCredentialSecret(token);
 
@@ -47,7 +47,7 @@ Template.settings.events({
 Template.settings.helpers({
 
     isFacebookLinked: function() {
-        if (Meteor.user().services.facebook) {
+        if (Services.findOne({type: 'facebook'})) {
             return '';
         } else {
             return 'disabled';
@@ -66,19 +66,13 @@ Template.settings.helpers({
         console.log(Meteor.user());
     },
     getTwitterAccounts: function() {
-        if (Meteor.user().services.twitter) {
-            return Meteor.user().services.twitter;
-        }
+        return Services.find({type: 'twitter'});
     },
     getFacebookAccounts: function() {
-        if (Meteor.user().services.facebook) {
-            return Meteor.user().services.facebook;
-        }
+        return Services.find({type: 'facebook'});
     },
     getFacebookPages: function() {
-        if (Meteor.user().services.facebookPages) {
-            return Meteor.user().services.facebookPages;
-        }
+        return Services.find({type: 'facebookPage'});
     }
 
 });

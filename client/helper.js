@@ -37,7 +37,7 @@ Handlebars.registerHelper('formatContent', function (content){
 });
 
 Handlebars.registerHelper('isAdmin', function () {
-  if (Meteor.user().username == 'marco' || Meteor.user().username == 'marcoschwartz') {
+  if (Meteor.user().emails[0].address == 'marcolivier.schwartz@gmail.com' || Meteor.user().emails[0].address == 'admin@schwartzindustries.com' ) {
     return true;
   }
   else {

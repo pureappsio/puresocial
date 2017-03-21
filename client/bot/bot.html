@@ -1,0 +1,28 @@
+<template name='bot'>
+    <h3>Create Welcome Message</h3>
+    <div class='row'>
+        <div class="col-md-6">
+            <label>Facebook Page</label>
+            <select id='service-id' class="form-control">
+                {{#each services}}{{> serviceListing}}{{/each}}
+            </select>
+        </div>
+    </div>
+    <div class='row'>
+        <div class='col-md-6'>
+            <label for='welcome-text'>Bot Welcome Message</label>
+            <input id="welcome-text">
+        </div>
+    </div>
+    <div class='row'>
+        <div class='col-md-6'>
+            <button id='add-welcome' class='btn btn-block btn-primary'>Add Welcome Message</button>
+        </div>
+    </div>
+    <div class='row'>
+        <div class="col-md-6">
+            <h3>Welcome Messages</h3>
+        </div>
+    </div>
+    {{#each welcomeMessages}}{{> automation}}{{/each}}
+</template>

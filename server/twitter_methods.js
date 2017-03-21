@@ -6,199 +6,168 @@ Future = Npm.require('fibers/future');
 
 Meteor.methods({
 
-  retweetPost: function(tweetId, account, user) {
+    retweetPost: function(tweetId, serviceId) {
 
-    // Find right token
-    for (var j = 0; j < user.services.twitter.length; j++) {
+      
+        var service = Services.findOne(serviceId);
+        var token = service.accessToken;
+        var token_secret = service.accessTokenSecret; 
 
-      if (user.services.twitter[j].screenName == account) {
-
-        var token = user.services.twitter[j].accessToken;
-        var token_secret = user.services.twitter[j].accessTokenSecret;
-
-      }
-    }
-
-    // Init client
-    if (process.env.ROOT_URL == "http://localhost:3000/") {
-      var client = new TwitterAPI({
-        consumer_key: Meteor.settings.twitterLocal.consumer_key,
-        consumer_secret: Meteor.settings.twitterLocal.consumer_secret,
-        access_token_key: token,
-        access_token_secret: token_secret
-      });
-    }
-    else {
-      var client = new TwitterAPI({
-        consumer_key: Meteor.settings.twitterOnline.consumer_key,
-        consumer_secret: Meteor.settings.twitterOnline.consumer_secret,
-        access_token_key: token,
-        access_token_secret: token_secret
-      });
-    }
-
-    // Retweet
-    client.post('statuses/retweet/' + tweetId,  function(error, tweet, response){
-      if(error) throw error;
-    });
-
-  },
-  getAccountsNames: function(user) {
-
-    var accountNames = [];
-
-    // Go through all user Twitter accounts
-    twitterAccounts = user.services.twitter;
-    for (var i = 0; i < twitterAccounts.length; i++) {
-
-      // Token
-      var twitterData = twitterAccounts[i];
-      var token = twitterData.accessToken;
-      var token_secret = twitterData.accessTokenSecret;
-
-      var accountName = getUserCredentials(token, token_secret);
-      console.log(accountName);
-      twitterAccounts[i].name = accountName;
-
-    }
-
-    // Update
-    Meteor.users.update({_id: user._id}, { $set: {"services.twitter": twitterAccounts} }, function(error) {
-      if (error) {console.log(error);}
-    });
-
-  },
-	userAddTwitterOauthCredentials: function(token, secret) {
-
-    // Retrieve data
-    var data = Twitter.retrieveCredential(token, secret).serviceData;
-    console.log(data);
-
-    // Get credentials
-    var accountName = getUserCredentials(data.accessToken, data.accessTokenSecret);
-    data.name = accountName;
-
-    // Update user profile
-    Meteor.users.update({_id: Meteor.user()._id}, { $push: {"services.twitter": data} }, function(error) {
-      if (error) {console.log(error);}
-    });
-
-  },
-  deleteTwitterAccount: function(account) {
-
-  	// Update user profile
-    Meteor.users.update({_id: Meteor.user()._id}, { $pull: {"services.twitter": account} }, function(error) {
-      if (error) {console.log(error);}
-    });
-
-  },
-  postOnTwitter: function(post, account, user) {
-
-    console.log('Posting on Twitter');
-
-    // Add social tag
-    post.content = Meteor.call('addSocialTag', post.content);
-
-    // Find right token
-    for (var j = 0; j < user.services.twitter.length; j++) {
-
-      if (user.services.twitter[j].screenName == account) {
-
-        var token = user.services.twitter[j].accessToken;
-        var token_secret = user.services.twitter[j].accessTokenSecret;
-
-      }
-    }
-
-    // Init client
-    if (process.env.ROOT_URL == "http://localhost:3000/") {
-      var client = new TwitterAPI({
-        consumer_key: Meteor.settings.twitterLocal.consumer_key,
-        consumer_secret: Meteor.settings.twitterLocal.consumer_secret,
-        access_token_key: token,
-        access_token_secret: token_secret
-      });
-    }
-    else {
-      var client = new TwitterAPI({
-        consumer_key: Meteor.settings.twitterOnline.consumer_key,
-        consumer_secret: Meteor.settings.twitterOnline.consumer_secret,
-        access_token_key: token,
-        access_token_secret: token_secret
-      });
-    }
-
-    // Image present ?
-    if (post.picture) {
-
-      // Load picture
-      var answer = HTTP.get(post.picture, {
-        encoding: null, // get content as binary data
-        responseType: 'buffer' // get it as a buffer
-      });
-
-      // Post picture
-      client.post('media/upload', {media: answer.content}, function(error, media, response){
-
-        if (error) { console.log(error); }
-        if (!error) {
-
-        // If successful, a media object will be returned.
-        console.log(media);
-
-        // Lets tweet it
-        var status = {
-          status: post.content,
-          media_ids: media.media_id_string // Pass the media id string
+        // Init client
+        if (process.env.ROOT_URL == "http://localhost:3000/") {
+            var client = new TwitterAPI({
+                consumer_key: Meteor.settings.twitterLocal.consumer_key,
+                consumer_secret: Meteor.settings.twitterLocal.consumer_secret,
+                access_token_key: token,
+                access_token_secret: token_secret
+            });
+        } else {
+            var client = new TwitterAPI({
+                consumer_key: Meteor.settings.twitterOnline.consumer_key,
+                consumer_secret: Meteor.settings.twitterOnline.consumer_secret,
+                access_token_key: token,
+                access_token_secret: token_secret
+            });
         }
 
-        client.post('statuses/update', status, function(error, tweet, response){
-          if (!error) {
-            console.log(tweet);
-          }
+        // Retweet
+        client.post('statuses/retweet/' + tweetId, function(error, tweet, response) {
+            if (error) throw error;
         });
 
+    },
+    userAddTwitterOauthCredentials: function(token, secret) {
+
+        // Retrieve data
+        var service = Twitter.retrieveCredential(token, secret).serviceData;
+
+        // Get credentials
+        var accountName = getUserCredentials(service.accessToken, service.accessTokenSecret);
+        service.name = accountName;
+
+        service.userId = Meteor.user()._id;
+        service.type = 'twitter';
+
+        console.log(service);
+
+        // Check if exists
+        if (Services.findOne({ type: 'twitter', userId: Meteor.user()._id })) {
+
+            console.log('Already existing Twitter data');
+
+        } else {
+            Services.insert(service);
         }
-      });
-    }
 
-    else {
+        // Update user profile
+        // Meteor.users.update({_id: Meteor.user()._id}, { $push: {"services.twitter": data} }, function(error) {
+        //   if (error) {console.log(error);}
+        // });
 
-      // Post
-      client.post('statuses/update', {status: post.content},  function(error, tweet, response){
-        if(error) throw error;
-      });
+
+    },
+    deleteTwitterAccount: function(accountId) {
+
+        // Update user profile
+        Services.remove(accountId);
+
+    },
+    postOnTwitter: function(post) {
+
+        console.log('Posting on Twitter');
+
+        // Add social tag
+        post.content = Meteor.call('addSocialTag', post.content);
+
+        var service = Services.findOne(post.serviceId);
+        var token = service.accessToken;
+        var token_secret = service.accessTokenSecret; 
+
+        // Init client
+        if (process.env.ROOT_URL == "http://localhost:3000/") {
+            var client = new TwitterAPI({
+                consumer_key: Meteor.settings.twitterLocal.consumer_key,
+                consumer_secret: Meteor.settings.twitterLocal.consumer_secret,
+                access_token_key: token,
+                access_token_secret: token_secret
+            });
+        } else {
+            var client = new TwitterAPI({
+                consumer_key: Meteor.settings.twitterOnline.consumer_key,
+                consumer_secret: Meteor.settings.twitterOnline.consumer_secret,
+                access_token_key: token,
+                access_token_secret: token_secret
+            });
+        }
+
+        // Image present ?
+        if (post.picture) {
+
+            // Load picture
+            var answer = HTTP.get(post.picture, {
+                encoding: null, // get content as binary data
+                responseType: 'buffer' // get it as a buffer
+            });
+
+            // Post picture
+            client.post('media/upload', { media: answer.content }, function(error, media, response) {
+
+                if (error) { console.log(error); }
+                if (!error) {
+
+                    // If successful, a media object will be returned.
+                    console.log(media);
+
+                    // Lets tweet it
+                    var status = {
+                        status: post.content,
+                        media_ids: media.media_id_string // Pass the media id string
+                    }
+
+                    client.post('statuses/update', status, function(error, tweet, response) {
+                        if (!error) {
+                            console.log(tweet);
+                        }
+                    });
+
+                }
+            });
+        } else {
+
+            // Post
+            client.post('statuses/update', { status: post.content }, function(error, tweet, response) {
+                if (error) throw error;
+            });
+        }
     }
-  }
 });
 
 function getUserCredentials(token, token_secret) {
 
-  var fut = new Future();
+    var fut = new Future();
 
     // Init client
     if (process.env.ROOT_URL == "http://localhost:3000/") {
-      var client = new TwitterAPI({
-        consumer_key: Meteor.settings.twitterLocal.consumer_key,
-        consumer_secret: Meteor.settings.twitterLocal.consumer_secret,
-        access_token_key: token,
-        access_token_secret: token_secret
-      });
-    }
-    else {
-      var client = new TwitterAPI({
-        consumer_key: Meteor.settings.twitterOnline.consumer_key,
-        consumer_secret: Meteor.settings.twitterOnline.consumer_secret,
-        access_token_key: token,
-        access_token_secret: token_secret
-      });
+        var client = new TwitterAPI({
+            consumer_key: Meteor.settings.twitterLocal.consumer_key,
+            consumer_secret: Meteor.settings.twitterLocal.consumer_secret,
+            access_token_key: token,
+            access_token_secret: token_secret
+        });
+    } else {
+        var client = new TwitterAPI({
+            consumer_key: Meteor.settings.twitterOnline.consumer_key,
+            consumer_secret: Meteor.settings.twitterOnline.consumer_secret,
+            access_token_key: token,
+            access_token_secret: token_secret
+        });
     }
 
     // Query account data
-    client.get('account/verify_credentials', function(error, media, response){
+    client.get('account/verify_credentials', function(error, media, response) {
 
-      // Return account data
-      fut.return(JSON.parse(response.body).name);
+        // Return account data
+        fut.return(JSON.parse(response.body).name);
 
     });
 

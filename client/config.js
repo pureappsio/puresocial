@@ -1,6 +1,6 @@
-Accounts.ui.config({
-  requestPermissions: {
-     facebook: ['publish_pages', 'manage_pages']
-  },
-  passwordSignupFields: 'USERNAME_AND_EMAIL'
-});
+// Accounts.ui.config({
+//   requestPermissions: {
+//      facebook: 
+//   },
+//   passwordSignupFields: 'USERNAME_AND_EMAIL'
+// });

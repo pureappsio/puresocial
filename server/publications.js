@@ -18,4 +18,8 @@ if(Meteor.isServer) {
 	Meteor.publish("userServices", function () {
 	  return Services.find({userId: this.userId});
 	});
+
+	Meteor.publish("userAutomations", function () {
+	  return Automations.find({userId: this.userId});
+	});
 }

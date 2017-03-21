@@ -3,6 +3,9 @@ Meteor.startup(function() {
     // Start cron
     SyncedCron.start();
 
+    // Get app token
+    Meteor.call('getAppToken');
+
     // Allow delete users
     Meteor.users.allow({
         remove: function() {

@@ -1,26 +1,29 @@
 Template.socialMediaChoice.helpers({
 
-  formatName: function(name) {
-    return name.replace(/\s+/g, '');
-  },
-  formatMedia: function(media) {
-  	if (media == 'Facebook') {
-  		return "FB";
-  	}
-  	if (media == 'Facebook Page') {
-  		return "FB Page";
-  	}
-  	else {
-  		return media;
-  	}
-  },
-  colorMedia: function(media) {
-  	if (media == 'Facebook' || media == 'Facebook Page') {
-  		return 'btn-primary';
-  	}
-  	if (media == 'Twitter') {
-  		return 'btn-info';
-  	}
-  }
+    formatMedia: function() {
+        if (this.type == 'facebook') {
+            return "FB";
+        } else if (this.type == 'facebookPage') {
+            return "FB Page";
+        } else {
+            return 'Twitter';
+        }
+    },
+    displayName: function() {
+       if (this.type == 'facebookPage' || this.type == 'facebook') {
+            return this.name;
+        }
+        if (this.type == 'twitter') {
+            return this.name;
+        }
+    },
+    colorMedia: function(media) {
+        if (this.type == 'facebookPage' || this.type == 'facebook') {
+            return 'btn-primary';
+        }
+        if (this.type == 'twitter') {
+            return 'btn-info';
+        }
+    }
 
 });
