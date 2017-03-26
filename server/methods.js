@@ -83,38 +83,7 @@ Meteor.methods({
         });
 
     },
-    // updateFacebookPagesTokens: function() {
-
-    //     // Find token
-    //     var service = Services.findOne({ type: 'facebook', userId: Meteor.user()._id })
-    //     var token = service.accessToken;
-
-    //     // Set token
-    //     FacebookAPI.setAccessToken(token);
-
-    //     // Get pages
-    //     var pages = Async.runSync(function(done) {
-    //         FacebookAPI.get("me/accounts", function(err, res) {
-    //             done(null, res.data);
-    //         });
-    //     });
-
-    //     var newPages = pages.result;
-    //     var pages = Meteor.user().services.facebookPages;
-
-    //     for (i in pages) {
-
-    //         for (n in newPages) {
-    //             if (newPages[n].id == pages[i].id) {
-    //                 pages[i] = newPages[n];
-    //             }
-    //         }
-    //     }
-
-    //     // Update tokens
-    //     Meteor.users.update(Meteor.user()._id, { $set: { "services.facebookPages": pages } })
-
-    // },
+    
     saveNewPost: function(post) {
 
         // Build post object

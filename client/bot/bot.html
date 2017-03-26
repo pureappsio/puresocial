@@ -1,7 +1,13 @@
 <template name='bot'>
-    <h3>Create Welcome Message</h3>
     <div class='row'>
-        <div class="col-md-6">
+        <div class="col-md-2"></div>
+        <div class="col-md-8">
+            <h3>Bot Automation</h3>
+        </div>
+    </div>
+    <div class='row'>
+        <div class="col-md-2"></div>
+        <div class="col-md-8">
             <label>Facebook Page</label>
             <select id='service-id' class="form-control">
                 {{#each services}}{{> serviceListing}}{{/each}}
@@ -9,20 +15,30 @@
         </div>
     </div>
     <div class='row'>
-        <div class='col-md-6'>
-            <label for='welcome-text'>Bot Welcome Message</label>
-            <input id="welcome-text">
+        <div class="col-md-2"></div>
+        <div class='col-md-8'>
+            <label for='keywords'>Keywords</label>
+            <input class='form-control' id="keywords">
         </div>
     </div>
     <div class='row'>
-        <div class='col-md-6'>
-            <button id='add-welcome' class='btn btn-block btn-primary'>Add Welcome Message</button>
+        <div class="col-md-2"></div>
+        <div class='col-md-8'>
+            <label for='bot-text'>Bot Answer</label>
+            <textarea class='form-control' id='bot-text' rows="4" cols="50"></textarea>
         </div>
     </div>
     <div class='row'>
-        <div class="col-md-6">
-            <h3>Welcome Messages</h3>
+        <div class="col-md-2"></div>
+        <div class='col-md-8'>
+            <button id='add-automation' class='btn btn-block btn-primary'>Add Automated Answer</button>
         </div>
     </div>
-    {{#each welcomeMessages}}{{> automation}}{{/each}}
+    <div class='row'>
+        <div class="col-md-2"></div>
+        <div class="col-md-8">
+            <h3>Automations</h3>
+        </div>
+    </div>
+    {{#each automations}}{{> automation}}{{/each}}
 </template>

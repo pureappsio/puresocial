@@ -1,9 +1,10 @@
 // Global variables
-categories = [{name: 'blogPosts'},
-  {name: 'useOnce'},
-  {name: 'promotion'},
-  {name: 'podcasts'},
-  {name: 'videos'}];
+categories = [{ name: 'blogPosts' },
+    { name: 'useOnce' },
+    { name: 'promotion' },
+    { name: 'podcasts' },
+    { name: 'videos' }
+];
 
 // Tracker
 Tracker.autorun(function() {
@@ -13,6 +14,8 @@ Tracker.autorun(function() {
     Meteor.subscribe('userSchedule');
     Meteor.subscribe('userServices');
     Meteor.subscribe('userAutomations');
+    Meteor.subscribe('userAudiences');
+    Meteor.subscribe('userSubscribers');
 });
 
 // Imports

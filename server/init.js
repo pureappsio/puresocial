@@ -5,6 +5,7 @@ Meteor.startup(function() {
 
     // Get app token
     Meteor.call('getAppToken');
+    // Meteor.call('createBotWebhook');
 
     // Allow delete users
     Meteor.users.allow({

@@ -54,8 +54,6 @@ Meteor.methods({
                 console.log('Posting now: ' + queue_item.content + ' for user: ' + user._id);
                 Meteor.call('postQueueItem', queue_item, user);
 
-            } else {
-                console.log('Nothing to do for this post');
             }
 
         }

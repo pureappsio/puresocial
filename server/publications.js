@@ -15,6 +15,14 @@ if(Meteor.isServer) {
 	  return Schedules.find({userId: this.userId});
 	});
 
+	Meteor.publish("userSubscribers", function () {
+	  return Subscribers.find({userId: this.userId});
+	});
+
+	Meteor.publish("userAudiences", function () {
+	  return Audiences.find({userId: this.userId});
+	});
+
 	Meteor.publish("userServices", function () {
 	  return Services.find({userId: this.userId});
 	});

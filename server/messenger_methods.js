@@ -1,12 +1,18 @@
 import FacebookAPI from 'fbgraph';
 FacebookAPI.setVersion("2.8");
+Future = Npm.require('fibers/future');
 
 Meteor.methods({
 
-    addWelcomeBotMessage: function(automation) {
+    addBotAutomation: function(automation) {
 
         console.log(automation);
         Automations.insert(automation);
+
+    },
+    deleteAutomation: function(automationId) {
+
+        Automations.remove(automationId);
 
     },
     getAppToken: function() {
@@ -33,15 +39,49 @@ Meteor.methods({
         var service = Services.findOne({ type: 'facebookApp' })
         var token = service.access_token;
 
+        var myFuture = new Future();
         FacebookAPI.get(Meteor.settings.facebookOnline.appId + '/subscriptions?access_token=' + token, function(err, res) {
 
-            // Result
-            console.log(res);
+            if (err) {
+                console.log(err);
+                myFuture.return({});
+            } else {
+                console.log(res.data);
+                myFuture.return(res.data);
+            }
 
         });
 
+        return myFuture.wait();
+
     },
-    createWebhook: function() {
+    createBotWebhook: function() {
+
+        // Check webhooks
+        var hooks = Meteor.call('readSubscriptions');
+        console.log(hooks)
+
+        var hookUrl = Meteor.absoluteUrl() + 'api/messenger';
+        // var hookUrl = 'https://44043141.ngrok.io/api/messenger';
+
+        var hookExists = false;
+
+        for (h in hooks) {
+
+            var url = hooks[h].callback_url;
+
+            if (url.indexOf(hookUrl) != -1) {
+                hookExists = true;
+            }
+        }
+
+        if (!hookExists) {
+            Meteor.call('createWebhook', hookUrl);
+            console.log('New hook created');
+        }
+
+    },
+    createWebhook: function(hookUrl) {
 
         // Find token
         var service = Services.findOne({ type: 'facebookApp' })
@@ -50,49 +90,114 @@ Meteor.methods({
         // Request data
         var data = {
             object: "page",
-            callback_url: 'https://puresocial.io/api/messenger',
-            fields: "messages",
-            verify_token: 'puresocial'
+            callback_url: hookUrl,
+            fields: "messages, message_deliveries, message_reads, messaging_postbacks",
+            verify_token: Meteor.settings.facebookOnline.botToken
         }
+        console.log(data);
 
+        var myFuture = new Future();
         FacebookAPI.post(Meteor.settings.facebookOnline.appId + '/subscriptions?access_token=' + token, data, function(err, res) {
 
-            // Result
-            console.log(res);
+            if (err) {
+                console.log(err);
+                myFuture.return({});
+            } else {
+                console.log(res);
+                myFuture.return(res);
+            }
 
         });
+
+        return myFuture.wait();
 
     },
     subscribePage: function(serviceId) {
 
-        // Find token
-        // var service = Services.findOne(serviceId)        
-        // var token = service.access_token;
-        var token = 'EAAFZAkfnDx7gBANCdQUPlz4JHOrc1H5LYr4YBo6g05eAZBgkKPmd2pDQjJD9rNTWh9C6QVY8dkUp9kv5cmHVbIrlsWI3jrptasrqf6UFB6Hg0YVkEZAZA9mwiUsK72rItfwen0bVQ9nTX2NZC1SbCewDHcjXIYz0mhAJZCNDCzfQZDZD';
+        console.log('Subscribing page');
 
-        FacebookAPI.post('me/subscribed_apps?access_token=' + token, {}, function(err, res) {
+        // Find token
+        var service = Services.findOne(serviceId);
+        var token = service.access_token;
+
+        var myFuture = new Future();
+        FacebookAPI.post(service.id + '/subscribed_apps?access_token=' + token, {}, function(err, res) {
 
             // Result
             console.log(res);
 
         });
+
+        Services.update(serviceId, { $set: { bot: 'on' } });
+
+        console.log(Services.findOne(serviceId));
+
+        return myFuture.wait();
+
+    },
+    unSubscribePage: function(serviceId) {
+
+        console.log('Unsubscribing page');
+
+        // Find token
+        var service = Services.findOne(serviceId);
+        var token = service.access_token;
+
+        var myFuture = new Future();
+        FacebookAPI.del(service.id + '/subscribed_apps?access_token=' + token, {}, function(err, res) {
+
+            // Result
+            console.log(res);
+
+        });
+
+
+        Services.update(serviceId, { $set: { bot: 'off' } });
+
+        console.log(Services.findOne(serviceId));
+
+        return myFuture.wait();
 
     },
     apiTest: function() {
 
         console.log('API test')
 
-       	Meteor.call('readSubscriptions');
+        Meteor.call('readSubscriptions');
+
+        var service = Services.findOne("j8hZBiaLKibLi4E5S");
+
+        Meteor.call('sendMessengerMessage', service, {
+            recipient: {
+                id: "1295216883899545"
+            },
+            message: {
+                text: "Just checking on you :)"
+            }
+        });
 
         // Meteor.call('createWebhook');
         // Meteor.call('subscribePage', '');
 
     },
+    addMessengerSubscriber: function(subscriber) {
 
+        if (Subscribers.findOne({ serviceId: subscriber.serviceId, messengerId: subscriber.messengerId })) {
+
+            console.log('Existing messenger subscriber');
+
+        } else {
+
+            console.log(subscriber);
+            Subscribers.insert(subscriber);
+
+        }
+
+    },
     processMessengerEvent: function(event) {
 
-    	console.log('Event: ');
-    	console.log(event);
+        console.log('Event: ');
+        console.log(event);
 
         var senderID = event.sender.id;
         var recipientID = event.recipient.id;
@@ -108,29 +213,47 @@ Meteor.methods({
         var messageText = message.text;
         var messageAttachments = message.attachments;
 
+        // Look for service
+        var service = Services.findOne({ id: recipientID });
+
+        // Add to audience
+        var subscriber = {
+            messengerId: event.sender.id,
+            serviceId: service._id,
+            userId: service.userId,
+            date: new Date()
+        }
+        Meteor.call('addMessengerSubscriber', subscriber);
+
         if (messageText) {
 
             // Convert to lower case for matching
             messageText = messageText.toLowerCase();
 
-            if (messageText.indexOf('hello') != -1) {
-                answer = "Hello, welcome on our page! This is an automated response. What can we do for you today?";
+            // Look for all automations
+            var automations = Automations.find({ serviceId: service._id }).fetch();
+
+            answered = false;
+            for (a in automations) {
+
+                var automation = automations[a];
+                var keywords = automation.keywords;
+
+                for (k in keywords) {
+                    if (messageText.indexOf(keywords[k]) != -1) {
+                        console.log('Matching keyword: ' + keywords[k]);
+                        answer = automation.message;
+                        answered = true;
+                    }
+                }
             }
-            else if (messageText.indexOf('what can you do') != -1 || messageText.indexOf('help') != -1) {
-                answer = "I can do many things for you. Try asking me about our website, about probiotics or about our current best article and I'll redirect you to our best resources.";
-            }
-            else if (messageText.indexOf('probiotics') != -1 ) {
-                answer = "Wondering if you should give you dog probiotics? Check this article on the topic: https://caninewell.com/should-i-give-my-dog-probiotics";
-            }
-            else if (messageText.indexOf('website') != -1 ) {
-                answer = "You will find all informations about dog health & supplements for dogs on our website at https://caninewell.com";
-            }
-            else if (messageText.indexOf('best article') != -1 ) {
-                answer = "I really recommend this article that is our #1 most read article on our site: https://caninewell.com/best-probiotics-for-dogs";
-            }
-            else {
+
+            // Default 
+            if (!answered) {
                 answer = "I didn't quite get that. You can ask me for help if to know everything I can do for you :)";
             }
+
+            console.log('Answer: ' + answer);
 
             var messageData = {
                 recipient: {
@@ -141,7 +264,7 @@ Meteor.methods({
                 }
             };
 
-            Meteor.call('sendMessengerMessage', messageData);
+            Meteor.call('sendMessengerMessage', service, messageData);
 
 
         } else if (messageAttachments) {
@@ -149,16 +272,41 @@ Meteor.methods({
         }
 
     },
-    sendMessengerMessage: function(messageData) {
+    sendMessengerMessage: function(service, messageData) {
 
-    	var token = 'EAAFZAkfnDx7gBANCdQUPlz4JHOrc1H5LYr4YBo6g05eAZBgkKPmd2pDQjJD9rNTWh9C6QVY8dkUp9kv5cmHVbIrlsWI3jrptasrqf6UFB6Hg0YVkEZAZA9mwiUsK72rItfwen0bVQ9nTX2NZC1SbCewDHcjXIYz0mhAJZCNDCzfQZDZD';
+        var token = service.access_token;
 
-        FacebookAPI.post('me/messages?access_token=' + token, messageData, function(err, res) {
+        FacebookAPI.post(service.id + '/messages?access_token=' + token, messageData, function(err, res) {
 
             // Result
             console.log(res);
 
         });
+
+    },
+    sendMessengerBroadcast: function(message) {
+
+        // Get service
+        var service = Services.findOne(message.serviceId);
+
+        // Get all subscribers
+        var subscribers = Subscribers.find({ serviceId: service._id }).fetch();
+
+        for (i in subscribers) {
+
+            var messageData = {
+                recipient: {
+                    id: subscribers[i].messengerId
+                },
+                message: {
+                    text: message.message
+                }
+            };
+
+            console.log(messageData);
+
+            Meteor.call('sendMessengerMessage', service, messageData);
+        }
 
     }
 

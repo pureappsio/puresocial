@@ -31,7 +31,7 @@ Template.admin.rendered = function() {
 Template.admin.events({
 
     'click #test': function() {
-        Meteor.call('apiTest');
+        Meteor.call('createBotWebhook');
     },
     'click #update-twitter': function() {
         Meteor.call('getAccountsNames', Meteor.user());

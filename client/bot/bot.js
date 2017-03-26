@@ -1,26 +1,33 @@
 Template.bot.helpers({
 
     services: function() {
-        return Services.find({ type: 'facebookPage' });
+        return Services.find({ type: 'facebookPage', bot: 'on' });
     },
-    welcomeMessages: function() {
-        return Automations.find({ type: 'welcomeMessage' });
+    automations: function() {
+        return Automations.find({ serviceId: Session.get('serviceId') });
     }
 
 });
 
 Template.bot.events({
 
-    'click #add-welcome': function() {
+    'click #service-id, change #service-id': function() {
+
+        Session.set('serviceId', $('#service-id :selected').val());
+
+    },
+    'click #add-automation': function() {
 
         var automation = {
             serviceId: $('#service-id :selected').val(),
-            message: CKEDITOR.instances['welcome-text'].getData(),
-            userId: Meteor.user()._id,
-            type: 'welcomeMessage'
+            keywords: ($('#keywords').val()).split(','),
+            message: $('#bot-text').val(),
+            userId: Meteor.user()._id
         }
 
-        Meteor.call('addWelcomeBotMessage', automation);
+        console.log(automation);
+
+        Meteor.call('addBotAutomation', automation);
 
     }
 
@@ -28,7 +35,7 @@ Template.bot.events({
 
 Template.bot.onRendered(function() {
 
-    // Init editor
-    CKEDITOR.replace('welcome-text');
+    // // Init editor
+    // CKEDITOR.replace('bot-text');
 
 });

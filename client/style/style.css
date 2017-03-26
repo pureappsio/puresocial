@@ -1,5 +1,14 @@
 /* CSS declarations go here */
 
+.action-button {
+    cursor: pointer;
+    color: gray;
+}
+
+.action-button:hover {
+    color: red;
+}
+
 body {
     font-size: 18px;
 }

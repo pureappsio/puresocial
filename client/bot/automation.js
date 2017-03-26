@@ -10,3 +10,11 @@ Template.automation.helpers({
     }
 
 });
+
+Template.automation.events({
+
+    'click .delete': function() {
+        Meteor.call('deleteAutomation', this._id)
+    }
+
+});
