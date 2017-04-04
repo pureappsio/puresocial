@@ -16,8 +16,12 @@ Tracker.autorun(function() {
     Meteor.subscribe('userAutomations');
     Meteor.subscribe('userAudiences');
     Meteor.subscribe('userSubscribers');
+    Meteor.subscribe('userIntegrations');
+    Meteor.subscribe('files.images.all');
 });
 
 // Imports
 import 'bootstrap';
 import '/node_modules/bootstrap/dist/css/bootstrap.min.css';
+
+const Spinner = require('spin');

@@ -24,7 +24,10 @@ Meteor.methods({
         url += '&grant_type=client_credentials'
 
         var result = HTTP.get(url);
-        var token = (result.content).substring(13);
+        var content = JSON.parse(result.content);
+        var token = content.access_token;
+
+        console.log('App token:' + token);
 
         if (Services.findOne({ type: 'facebookApp' })) {
             Services.update({ type: 'facebookApp' }, { $set: { access_token: token } });
@@ -86,6 +89,8 @@ Meteor.methods({
         // Find token
         var service = Services.findOne({ type: 'facebookApp' })
         var token = service.access_token;
+
+        console.log('App token:' + token);
 
         // Request data
         var data = {
@@ -161,22 +166,30 @@ Meteor.methods({
     },
     apiTest: function() {
 
-        console.log('API test')
+        console.log('API test');
 
-        Meteor.call('readSubscriptions');
+        // Services.remove({});
+        // Automations.remove({});
+        Posts.remove({});
+        // Automations.remove({});
+        Queues.remove({});
+        // Schedules.remove({});
+        // Subscribers.remove({});
 
-        var service = Services.findOne("j8hZBiaLKibLi4E5S");
+        // Meteor.call('readSubscriptions');
 
-        Meteor.call('sendMessengerMessage', service, {
-            recipient: {
-                id: "1295216883899545"
-            },
-            message: {
-                text: "Just checking on you :)"
-            }
-        });
+        // var service = Services.findOne("j8hZBiaLKibLi4E5S");
 
-        // Meteor.call('createWebhook');
+        // Meteor.call('sendMessengerMessage', service, {
+        //     recipient: {
+        //         id: "1295216883899545"
+        //     },
+        //     message: {
+        //         text: "Just checking on you :)"
+        //     }
+        // });
+
+        // Meteor.call('createBotWebhook');
         // Meteor.call('subscribePage', '');
 
     },
@@ -215,6 +228,8 @@ Meteor.methods({
 
         // Look for service
         var service = Services.findOne({ id: recipientID });
+        console.log('Service: ');
+        console.log(service);
 
         // Add to audience
         var subscriber = {
@@ -230,8 +245,13 @@ Meteor.methods({
             // Convert to lower case for matching
             messageText = messageText.toLowerCase();
 
+            console.log('Message text: ');
+            console.log(messageText);
+
             // Look for all automations
             var automations = Automations.find({ serviceId: service._id }).fetch();
+            console.log('Automations: ');
+            console.log(automations);
 
             answered = false;
             for (a in automations) {
@@ -248,28 +268,33 @@ Meteor.methods({
                 }
             }
 
-            // Default 
-            if (!answered) {
-                answer = "I didn't quite get that. You can ask me for help if to know everything I can do for you :)";
+            // // Default 
+            // if (!answered) {
+            //     answer = "I didn't quite get that. You can ask me for help if to know everything I can do for you :)";
+            // }
+
+            if (answered) {
+
+                console.log('Answer: ' + answer);
+
+                var messageData = {
+                    recipient: {
+                        id: senderID
+                    },
+                    message: {
+                        text: answer
+                    }
+                };
+
+                Meteor.call('sendMessengerMessage', service, messageData);
+
             }
 
-            console.log('Answer: ' + answer);
-
-            var messageData = {
-                recipient: {
-                    id: senderID
-                },
-                message: {
-                    text: answer
-                }
-            };
-
-            Meteor.call('sendMessengerMessage', service, messageData);
-
-
-        } else if (messageAttachments) {
-            sendTextMessage(senderID, "Message with attachment received");
         }
+
+        // else if (messageAttachments) {
+        //     sendTextMessage(senderID, "Message with attachment received");
+        // }
 
     },
     sendMessengerMessage: function(service, messageData) {

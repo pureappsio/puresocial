@@ -90,10 +90,11 @@ Meteor.methods({
 
             // Load picture
             console.log('Posting FB picture');
+            var imgUrl = Images.findOne(post.picture).versions.original.meta.pipeFrom;
 
             // Post
             var pictureData = {
-                url: post.picture,
+                url: imgUrl,
                 message: post.content
             };
 
@@ -151,10 +152,11 @@ Meteor.methods({
 
             // Load picture
             console.log('Posting FB picture');
+            var imgUrl = Images.findOne(post.picture).versions.original.meta.pipeFrom;
 
             // Post
             var pictureData = {
-                url: post.picture,
+                url: imgUrl,
                 message: post.content
             };
 

@@ -1,50 +1,42 @@
 <template name='scheduleElement'>
-
-<div class='row'>
-  <div class='col-md-12'><h4>{{getCategoryName name}}</h4></div>
-</div>
-
-<div class='row'>
-  <div class='col-md-12'>
-    <input class='{{name}}-day-choice' type="checkbox" name="day" value="Monday"> Monday
-    <input class='{{name}}-day-choice' type="checkbox" name="day" value="Tuesday"> Tuesday
-    <input class='{{name}}-day-choice' type="checkbox" name="day" value="Wednesday"> Wednesday
-    <input class='{{name}}-day-choice' type="checkbox" name="day" value="Thursday"> Thursday
-    <input class='{{name}}-day-choice' type="checkbox" name="day" value="Friday"> Friday
-    <input class='{{name}}-day-choice' type="checkbox" name="day" value="Saturday"> Saturday
-    <input class='{{name}}-day-choice' type="checkbox" name="day" value="Sunday"> Sunday
-  </div>
-</div>
-
-<div class='row'>
-  <div class='col-md-1'>
-    <select id='{{name}}-hour-choice' class="form-control">
-      <option value="0">0</option>
-      <option value="1">1</option>
-      <option value="2">2</option>
-      <option value="3">3</option>
-      <option value="4">4</option>
-      <option value="5">5</option>
-      <option value="6">6</option>
-      <option value="7">7</option>
-      <option value="8">8</option>
-      <option value="9">9</option>
-      <option value="10">10</option>
-      <option value="11">11</option>
-    </select>
-  </div> 
-  <div class='col-md-1'>
-    <select id='{{name}}-period-choice' class="form-control">
-      <option value="am">AM</option>
-      <option value="pm">PM</option>
-    </select>
-  </div>
-</div>
-
-<div class='row'>
-  <div class='col-md-2'>
-<button id='save-schedule' class='btn btn-primary'>Save Schedule</button>
-  </div>
-</div>
-
+    <div class='row'>
+        <div class='col-md-12'>
+            <h4>{{getCategoryName name}}</h4></div>
+    </div>
+    <div class='row'>
+        <div class='col-md-8'>
+            <input class='{{name}}-day-choice' type="checkbox" name="day" value="Monday"> Monday
+            <input class='{{name}}-day-choice' type="checkbox" name="day" value="Tuesday"> Tuesday
+            <input class='{{name}}-day-choice' type="checkbox" name="day" value="Wednesday"> Wednesday
+            <input class='{{name}}-day-choice' type="checkbox" name="day" value="Thursday"> Thursday
+            <input class='{{name}}-day-choice' type="checkbox" name="day" value="Friday"> Friday
+            <input class='{{name}}-day-choice' type="checkbox" name="day" value="Saturday"> Saturday
+            <input class='{{name}}-day-choice' type="checkbox" name="day" value="Sunday"> Sunday
+        </div>
+        <div class='col-md-1'>
+            <select id='{{name}}-hour-choice' class="form-control">
+                <option value="0">0</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+                <option value="9">9</option>
+                <option value="10">10</option>
+                <option value="11">11</option>
+            </select>
+        </div>
+        <div class='col-md-1'>
+            <select id='{{name}}-period-choice' class="form-control">
+                <option value="am">AM</option>
+                <option value="pm">PM</option>
+            </select>
+        </div>
+        <div class='col-md-2'>
+            <button id='save-schedule' class='btn btn-primary'>Save Schedule</button>
+        </div>
+    </div>
 </template>

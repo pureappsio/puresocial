@@ -21,7 +21,7 @@ Meteor.methods({
     postingQueue: function(user) {
 
         // Get next item from queue
-        console.log('Getting next item from queue for user ' + user.username);
+        console.log('Getting next item from queue for user ' + user.emails[0].address);
         var queue_items = Queues.find({ userId: user._id }, { sort: { date: 1 } }).fetch();
 
         // Create new queue in case it's empty

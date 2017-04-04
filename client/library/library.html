@@ -1,40 +1,29 @@
 <template name='library'>
-
-<h3>Library</h3>
-
-<div class="row">
-  <div class='col-md-2'><button id='show-filter' class='btn btn-lg btn-block btn-warning'>Hide Filters</button></div>
-</div>
-
-{{#if showFilters}}
-
-<div class="row">
-  {{#each getCategories}}
-    {{> selectCategory}}
-  {{/each}}
-</div>
-
-<div class="row">
-  {{#each socialMediaChoices}}
-    {{> socialMediaChoice}}
-  {{/each}}
-</div>
-
-{{/if}}
-
-<h3>Library</h3>
-
-<div class="row">
-  <div class="col-md-1 column-title"></div>
-  <div class="col-md-3 column-title">Content</div>
-  <div class="col-md-2 column-title">Category</div>
-  <div class="col-md-3 column-title">Media</div>
-</div>
-
-<div class="posts">
-  {{#each posts}}
-    {{> postItem}}
-  {{/each}}
-</div>
-
+    <div class="row voffset15">
+        <div class='col-md-3'>
+            <h3>Library</h3></div>
+    </div>
+    <div class="row">
+        <div class="col-md-1 column-title"></div>
+        <div class="col-md-3 column-title">Content</div>
+        <div class="col-md-2 column-title">Category</div>
+        <div class="col-md-3 column-title">Media</div>
+    </div>
+    <div class="posts">
+        {{#each posts}} {{> postItem}} {{/each}}
+    </div>
+    <div class="row voffset30">
+        <div class='col-md-2'></div>
+        <div class='col-md-8'>
+            <button id='show-filter' class='btn btn-lg btn-block btn-warning'>Hide Filters</button>
+        </div>
+    </div>
+    {{#if showFilters}}
+    <div class="row">
+        {{#each getCategories}} {{> selectCategory}} {{/each}}
+    </div>
+    <div class="row">
+        {{#each socialMediaChoices}} {{> socialMediaChoice}} {{/each}}
+    </div>
+    {{/if}}
 </template>

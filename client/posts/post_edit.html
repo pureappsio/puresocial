@@ -18,24 +18,8 @@
     </div>
     <div class='row'>
         <div class='col-md-6'>
-            <div class="input-group">
-                <span class="input-group-btn">
-            <span class="btn btn-primary btn-file">
-                Browse&hellip; <input type="file" class='file_bag' multiple>
-            </span>
-                </span>
-                <input type="text" id='file-name' class="form-control" readonly>
-            </div>
+            {{> uploadForm imageId="uploadedFile"}}
         </div>
-        <div class='col-md-1'>
-            <button class="upload btn btn-primary">Upload</button>
-        </div>
-        <div class='col-md-1'>
-            {{#each files}}
-            <p>{{percent_uploaded}}%</p>
-            {{/each}}
-        </div>
-        <!-- {{> upload_bootstrap formData=specificFormData callbacks=myCallbacks}} -->
     </div>
     {{#if imageUploaded}}
     <div class='row'>

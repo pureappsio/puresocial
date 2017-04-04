@@ -11,7 +11,7 @@ Template.newPost.helpers({
     },
     uploadedImage: function() {
         if (Session.get('uploadedFile')) {
-            return Session.get('uploadedFile');
+            return Images.findOne(Session.get('uploadedFile')).link();
         } else {
             return "default.jpg";
         }
@@ -34,26 +34,26 @@ Template.newPost.helpers({
 
 Template.newPost.events({
 
-    "change .btn-file :file": function(event, template) {
-        var files = event.currentTarget.files;
-        $('#file-name').val(files[0].name);
+    // "change .btn-file :file": function(event, template) {
+    //     var files = event.currentTarget.files;
+    //     $('#file-name').val(files[0].name);
 
-    },
-    "click button.upload": function() {
+    // },
+    // "click button.upload": function() {
 
-        // Get files
-        var files = $("input.file_bag")[0].files
+    //     // Get files
+    //     var files = $("input.file_bag")[0].files
 
-        // Upload
-        S3.upload({
-            files: files,
-            path: "pictures"
-        }, function(e, r) {
-            console.log('Callback: ');
-            console.log(r);
-            Session.set('uploadedFile', r.url);
-        });
-    },
+    //     // Upload
+    //     S3.upload({
+    //         files: files,
+    //         path: "pictures"
+    //     }, function(e, r) {
+    //         console.log('Callback: ');
+    //         console.log(r);
+    //         Session.set('uploadedFile', r.url);
+    //     });
+    // },
     'keyup #postContent': function() {
 
         // Get number character
@@ -118,6 +118,7 @@ Template.newPost.events({
 
             // Put confirmation message
             $('#confirm-add').text(' Saved!');
+            Session.set('uploadedFile', null);
 
         });
 

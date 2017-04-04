@@ -8,10 +8,10 @@ Template.postItem.events({
         });
 
     },
-    'click .post': function(event, template) {
+    'click .post': function() {
 
-        // Store in DB
-        Meteor.call('postNow', template.data, function(error, data) {
+        // Post
+        Meteor.call('postNow', this, function(error, data) {
             console.log("Posted");
         });
 
@@ -21,6 +21,13 @@ Template.postItem.events({
 
 Template.postItem.helpers({
 
+    pictureLink: function() {
+
+        if (this.picture) {
+            return Images.findOne(this.picture).link();
+        }
+
+    },
     formatMedia: function() {
 
         formatMedia = [];

@@ -5,6 +5,17 @@ Template.settings.events({
     //     Meteor.call('updateFacebookPagesTokens');
 
     // },
+    'click #add-integration': function() {
+
+        var accountData = {
+            type: $('#integration-type :selected').val(),
+            key: $('#integration-key').val(),
+            url: $('#integration-url').val(),
+            userId: Meteor.user()._id
+        };
+        Meteor.call('addIntegration', accountData);
+
+    },
     'click #save-timezone': function() {
 
         // Get user choice
@@ -46,8 +57,12 @@ Template.settings.events({
 
 Template.settings.helpers({
 
+    integrations: function() {
+        return Integrations.find({});
+    },
+
     isFacebookLinked: function() {
-        if (Services.findOne({type: 'facebook'})) {
+        if (Services.findOne({ type: 'facebook' })) {
             return '';
         } else {
             return 'disabled';
@@ -66,13 +81,13 @@ Template.settings.helpers({
         console.log(Meteor.user());
     },
     getTwitterAccounts: function() {
-        return Services.find({type: 'twitter'});
+        return Services.find({ type: 'twitter' });
     },
     getFacebookAccounts: function() {
-        return Services.find({type: 'facebook'});
+        return Services.find({ type: 'facebook' });
     },
     getFacebookPages: function() {
-        return Services.find({type: 'facebookPage'});
+        return Services.find({ type: 'facebookPage' });
     }
 
 });

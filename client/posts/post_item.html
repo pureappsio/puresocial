@@ -1,31 +1,22 @@
 <template name='postItem'>
-
-{{#if isNotCategoryFiltered}}
-
-{{#if isNotMediaFiltered}}
-
-<div class="row">
-
-  <div class="col-md-1 col-centered">
-    {{#if isPicturePresent}}
-    <img width='75px' src='{{picture}}'>
-    {{/if}}
-  </div>
-
-  <div class="col-md-3">{{formatContent content}}</div>
-  <div class="col-md-2">{{getCategoryName category}}</div>
-
-  <div class="col-md-3">
-  {{#each formatMedia}}
-    {{> mediaItem}}
-  {{/each}}
-  </div>
-
-  <div class="col-md-3"><a href="{{pathFor 'postEdit'}}"><button class='btn btn-primary'>Update</button></a>
-  <button class='btn btn-danger delete'>Delete</button>
-  <button class='btn btn-warning post'>Post</button></div>
-</div>
-
-{{/if}}{{/if}}
-
+    {{#if isNotCategoryFiltered}} {{#if isNotMediaFiltered}}
+    <div class="row">
+        <div class="col-md-1 col-centered">
+            {{#if isPicturePresent}}
+            <img class='img-fluid' src='{{pictureLink}}'> {{/if}}
+        </div>
+        <div class="col-md-3">{{formatContent content}}</div>
+        <div class="col-md-2">{{getCategoryName category}}</div>
+        <div class="col-md-3">
+            {{#each formatMedia}} {{> mediaItem}} {{/each}}
+        </div>
+        <div class="col-md-3">
+            <a href="{{pathFor 'postEdit'}}">
+                <button class='btn btn-primary'>Update</button>
+            </a>
+            <button class='btn btn-danger delete'>Delete</button>
+            <button class='btn btn-warning post'>Post</button>
+        </div>
+    </div>
+    {{/if}}{{/if}}
 </template>

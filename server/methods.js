@@ -83,7 +83,7 @@ Meteor.methods({
         });
 
     },
-    
+
     saveNewPost: function(post) {
 
         // Build post object
@@ -102,9 +102,6 @@ Meteor.methods({
 
         // Build post object
         console.log('Updating Post');
-
-        post.userId = Meteor.user()._id;
-        post.submitted = new Date();
         console.log(post);
 
         // Save in DB
@@ -160,14 +157,18 @@ Meteor.methods({
 
         // Post for each media
         for (i = 0; i < post.media.length; i++) {
-            if (post.media[i].platform == 'Twitter') {
-                Meteor.call('postOnTwitter', post, post.media[i].userName, Meteor.user());
+
+            var service = Services.findOne(post.media[i]);
+            post.serviceId = service._id;
+
+            if (service.type == 'twitter') {
+                Meteor.call('postOnTwitter', post);
             }
-            if (post.media[i].platform == 'Facebook Page') {
-                Meteor.call('postOnFacebookPage', post, post.media[i].userName, Meteor.user());
+            if (service.type == 'facebookPage') {
+                Meteor.call('postOnFacebookPage', post);
             }
-            if (post.media[i].platform == 'Facebook') {
-                Meteor.call('postOnFacebook', post, Meteor.user());
+            if (service.type == 'facebook') {
+                Meteor.call('postOnFacebook', post);
             }
         }
 

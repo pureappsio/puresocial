@@ -1,8 +1,20 @@
 /* CSS declarations go here */
 
+.schedule-title {
+    text-align: center;
+}
+
 .action-button {
     cursor: pointer;
     color: gray;
+}
+
+#spinner {
+    text-align: center;
+    opacity: 1;
+    position: fixed;
+    left: 50%;
+    top: 50%;
 }
 
 .action-button:hover {

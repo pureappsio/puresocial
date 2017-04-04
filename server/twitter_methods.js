@@ -8,10 +8,10 @@ Meteor.methods({
 
     retweetPost: function(tweetId, serviceId) {
 
-      
+
         var service = Services.findOne(serviceId);
         var token = service.accessToken;
-        var token_secret = service.accessTokenSecret; 
+        var token_secret = service.accessTokenSecret;
 
         // Init client
         if (process.env.ROOT_URL == "http://localhost:3000/") {
@@ -59,12 +59,6 @@ Meteor.methods({
             Services.insert(service);
         }
 
-        // Update user profile
-        // Meteor.users.update({_id: Meteor.user()._id}, { $push: {"services.twitter": data} }, function(error) {
-        //   if (error) {console.log(error);}
-        // });
-
-
     },
     deleteTwitterAccount: function(accountId) {
 
@@ -81,7 +75,7 @@ Meteor.methods({
 
         var service = Services.findOne(post.serviceId);
         var token = service.accessToken;
-        var token_secret = service.accessTokenSecret; 
+        var token_secret = service.accessTokenSecret;
 
         // Init client
         if (process.env.ROOT_URL == "http://localhost:3000/") {
@@ -103,8 +97,10 @@ Meteor.methods({
         // Image present ?
         if (post.picture) {
 
+            var imgUrl = Images.findOne(post.picture).versions.original.meta.pipeFrom;
+
             // Load picture
-            var answer = HTTP.get(post.picture, {
+            var answer = HTTP.get(imgUrl, {
                 encoding: null, // get content as binary data
                 responseType: 'buffer' // get it as a buffer
             });

@@ -9,18 +9,23 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
                 {{#if currentUser}}
-                <li class="nav-item"><a class="nav-link" href="{{pathFor 'newPost'}}">Add New Content</a></li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="{{pathFor 'newPost'}}" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Add New Content</a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                        <a class="dropdown-item" href="{{pathFor 'newPost'}}">Create New Post</a>
+                        <a class="dropdown-item" href="{{pathFor 'importPosts'}}">Import</a>
+                    </div>
+                </li>
                 <li class="nav-item"><a class="nav-link" href="{{pathFor 'queue'}}">Queue</a></li>
                 <li class="nav-item"><a class="nav-link" href="{{pathFor 'library'}}">Library</a></li>
                 <li class="nav-item"><a class="nav-link" href="{{pathFor 'schedule'}}">Schedule</a></li>
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="http://example.com" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Messenger Bot </a>
+                    <a class="nav-link dropdown-toggle" href="{{pathFor 'bot'}}" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Messenger Bot </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                        <!--                         <a class="dropdown-item" href="#">Audience</a>
- --><a class="dropdown-item" href="{{pathFor 'bot'}}">Automations</a>
+                        <a class="dropdown-item" href="{{pathFor 'bot'}}">Automations</a>
                         <a class="dropdown-item" href="{{pathFor 'broadcasts'}}">Broadcasts</a>
                         <a class="dropdown-item" href="{{pathFor 'audiences'}}">Audiences</a>
-</div>
+                    </div>
                 </li>
                 {{/if}}
             </ul>
@@ -29,7 +34,14 @@
                 <li class="nav-item"><a class="nav-link" href="{{pathFor 'settings'}}">Settings</a></li>{{/if}} {{#if isAdmin}}
                 <li class="nav-item"><a class="nav-link" href="{{pathFor 'admin'}}">Admin</a></li>
                 {{/if}} {{#if currentUser}}
-                <li class="nav-item"><a id='log-out' class="nav-link">Log Out</a></li>
+                <li class="nav-item">
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="http://example.com" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{email}}</a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                        <a id='log-out' class="dropdown-item" href="/">Log Out</a>
+                    </div>
+                </li>
                 {{/if}}
             </ul>
         </div>
