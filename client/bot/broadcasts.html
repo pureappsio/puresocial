@@ -14,17 +14,24 @@
             </select>
         </div>
     </div>
-    <div class='row'>
-        <div class="col-md-2"></div>
-        <div class='col-md-8'>
-            <label for='broadcast-text'>Message</label>
-            <textarea class='form-control' id='broadcast-text' rows="4" cols="50"></textarea>
-        </div>
-    </div>
+    {{> messageBuilder}}
+    
     <div class='row'>
         <div class="col-md-2"></div>
         <div class='col-md-8'>
             <button id='send-broadcast' class='btn btn-block btn-primary'>Send Broadcast to {{count}} subscribers</button>
+        </div>
+    </div>
+
+    <div class='row'>
+        <div class="col-md-2"></div>
+         <div class='col-md-4'>
+            <select class='form-control' id='test-user'>
+                {{#each subscribers}}{{> subscriberOption}}{{/each}}
+            </select>
+        </div>
+        <div class='col-md-4'>
+            <button id='send-test' class='btn btn-block btn-secondary'>Send Test Message</button>
         </div>
     </div>
 </template>

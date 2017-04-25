@@ -78,7 +78,7 @@ Template.postEdit.rendered = function() {
     // Set social media selecteds
     for (var i = 0; i < this.data.media.length; i++) {
 
-        $('#' + this.data.media).attr('checked', true);
+        $('#' + this.data.media[i]).attr('checked', true);
     }
 
 }

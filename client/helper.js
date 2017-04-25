@@ -24,6 +24,22 @@ Handlebars.registerHelper('formatDate', function(date) {
 
 });
 
+// Handlebars.registerHelper('isPixel', function(date) {
+
+//     Meteor.call('isPixel', function(err, data) {
+//         return data;
+//     });
+
+// });
+
+// Handlebars.registerHelper('pixel', function(date) {
+
+//     Meteor.call('getPixel', function(err, data) {
+//         return data;
+//     });
+
+// });
+
 Handlebars.registerHelper('formatContent', function(content) {
 
     contentLength = 75;

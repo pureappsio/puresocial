@@ -1,9 +1,9 @@
 Template.postItem.events({
 
-    'click .delete': function(event, template) {
+    'click .delete': function() {
 
         // Store in DB
-        Meteor.call('deletePost', template.data, function(error, data) {
+        Meteor.call('deletePost', this, function(error, data) {
             console.log("Deleted");
         });
 

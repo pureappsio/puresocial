@@ -34,6 +34,12 @@ Meteor.methods({
 
         url = 'https://' + integration.url + '/api/posts?key=' + integration.key;
 
+        if (parameters.type) {
+            url += '&category=' + parameters.type;
+        }
+
+        console.log(url);
+
         var answer = HTTP.get(url);
         var posts = answer.data.posts;
 
@@ -42,13 +48,19 @@ Meteor.methods({
             // Build post object
             var post = {};
             link = 'https://' + integration.url + '/' + posts[i].url;
-            post.content = posts[i].title + " " + link;
+
+            if (parameters.prefix) {
+                post.content = parameters.prefix + posts[i].title + " " + link;
+            } else {
+                post.content = posts[i].title + " " + link;
+            }
+
             post.category = parameters.category;
             post.media = parameters.media;
             post.userId = Meteor.user()._id;
             post.submitted = new Date();
             post.importId = posts[i]._id;
-            
+
 
             if (Posts.findOne({ importId: posts[i]._id })) {
                 console.log('Existing post');

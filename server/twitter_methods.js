@@ -8,7 +8,6 @@ Meteor.methods({
 
     retweetPost: function(tweetId, serviceId) {
 
-
         var service = Services.findOne(serviceId);
         var token = service.accessToken;
         var token_secret = service.accessTokenSecret;
@@ -51,7 +50,7 @@ Meteor.methods({
         console.log(service);
 
         // Check if exists
-        if (Services.findOne({ type: 'twitter', userId: Meteor.user()._id })) {
+        if (Services.findOne({ id: service.id, type: 'twitter', userId: Meteor.user()._id })) {
 
             console.log('Already existing Twitter data');
 
@@ -71,7 +70,7 @@ Meteor.methods({
         console.log('Posting on Twitter');
 
         // Add social tag
-        post.content = Meteor.call('addSocialTag', post.content);
+        post.content = Meteor.call('addSocialTag', post.content, 'twitter');
 
         var service = Services.findOne(post.serviceId);
         var token = service.accessToken;

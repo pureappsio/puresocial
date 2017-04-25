@@ -1,0 +1,13 @@
+<template name='subscriber'>
+    <div class='row'>
+        <div class="col-md-1"><img class='subscriber-img img-fluid' src='{{profile_pic}}'></div>
+        <div class="col-md-3">{{first_name}} {{last_name}}</div>
+        <div class="col-md-1">{{timezone}}</div>
+        <div class="col-md-1">{{gender}}</div>
+        <div class="col-md-2">{{formatDate}}</div>
+        <div class="col-md-2"><a href='/subscribers/{{_id}}/message' class='badge badge-primary badge-date'>Message</a></div>
+        <div class='col-md-1'>
+        	<i class="fa fa-trash fa-delete delete" aria-hidden="true"></i>
+        </div>
+    </div>
+</template>

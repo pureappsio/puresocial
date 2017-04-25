@@ -10,11 +10,11 @@ categories = [{ name: 'blogPosts' },
 
 Meteor.methods({
 
-    addSocialTag: function(content) {
+    addSocialTag: function(content, type) {
 
         var urlRegex = /(https?:\/\/[^\s]+)/g;
         var url = content.match(urlRegex);
-        content = content.replace(urlRegex, url + '?origin=social');
+        content = content.replace(urlRegex, url + '?origin=social' + '&medium=' + type);
 
         return content;
 
@@ -148,7 +148,7 @@ Meteor.methods({
         Posts.remove(post._id);
 
         // Regenerate queue
-        Meteor.call('generateQueue');
+        Meteor.call('generateQueue', Meteor.user());
 
     },
     postNow: function(post) {

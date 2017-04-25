@@ -4,6 +4,37 @@
     text-align: center;
 }
 
+.subscriber-img {
+    max-width: 30px !important;
+}
+
+.subscriber-img-big {
+    max-width: 100px !important;
+    margin-top: 25px;
+}
+
+.img-broadcast {
+    display: none;
+}
+
+.badge-date {
+    font-size: 16px !important;
+}
+
+.fa-delete {
+    color: gray;
+    cursor: pointer;
+    vertical-align: middle;
+}
+
+.fa-delete:hover {
+    color: red;
+}
+
+/*.row-middle {
+    vertical-align: middle;
+}*/
+
 .action-button {
     cursor: pointer;
     color: gray;

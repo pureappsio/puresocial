@@ -12,13 +12,28 @@
                 {{#each contentIntegrations}} {{> integrationListing}} {{/each}}
             </select>
         </div>
-        <div class='col-md-3'>
+        <div class='col-md-2'>
             <select class='form-control' id='category'>
                 {{#each getCategories}} {{> categoryElement}} {{/each}}
             </select>
         </div>
+        <div class='col-md-2'>
+            <select class='form-control' id='type'>
+                <option value='all'>All</option>
+                <option value='general'>General</option>
+                <option value='podcast'>Podcast</option>
+            </select>
+        </div>
         <div class='col-md-3'>
+            <input class='form-control' id='prefix'>
+        </div>
+        <div class='col-md-2'>
             <button id='import' class="btn btn-block btn-primary">Import</button>
+        </div>
+    </div>
+    <div class='row voffset30'>
+        <div class='col-md-12'>
+            Preview: {{preview}}
         </div>
     </div>
 </template>

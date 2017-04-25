@@ -1,5 +1,22 @@
 Meteor.methods({
 
+    isPixel: function() {
+
+        if (Meteor.settings.facebookPixel) {
+            return true;
+        }
+        else {
+            return false;
+        }
+
+    },
+    getPixel: function() {
+
+        if (Meteor.settings.facebookPixel) {
+            return Meteor.settings.facebookPixel;
+        }
+
+    },
     createUserAccount: function(data) {
 
         console.log(data);

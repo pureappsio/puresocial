@@ -1,0 +1,32 @@
+<template name='messageBuilder'>
+    <div class='row'>
+        <div class="col-md-2"></div>
+        <div class="col-md-8">
+            <label>Type</label>
+            <select id='type' class="form-control">
+                <option value="text">Text</option>
+                <option value="video">Video</option>
+                <option value="buttons">Buttons</option>
+                <option value="generic">Generic</option>
+            </select>
+        </div>
+    </div>
+    <div class='row'>
+        <div class="col-md-2"></div>
+        <div class='col-md-8'>
+            <div id='broadcast-content'>
+                <textarea class='form-control' placeholder='Message...' id='broadcast-text' rows="4" cols="50"></textarea>
+            </div>
+            <div class='img-broadcast'>
+                <div class='row'>
+                    <div class='col-md-10'>
+                        <div>{{> uploadForm imageId="messagePicture"}}</div>
+                    </div>
+                    <div class='col-md-2'>
+                        <button class='action btn btn-primary'>Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>

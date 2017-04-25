@@ -1,12 +1,14 @@
 <template name='automation'>
     <div class='row'>
         <div class="col-md-2"></div>
-        <div class="col-md-4">
-            {{keywords}}
+        <div class="col-md-3">
+            <input id='keywords-{{_id}}' type='text' value='{{keywords}}' class='form-control keywords'>
         </div>
-        <div class="col-md-4">
-            {{message}}
+        <div class="col-md-5">
+            <textarea id='message-{{_id}}' type='text' value='{{message}}' class='form-control message'></textarea>
         </div>
-        <div class="col-md-1"><i class="fa fa-trash delete action-button" aria-hidden="true"></i></div>
+        <div class="col-md-1">
+            <i class="fa fa-trash delete action-button" aria-hidden="true"></i>
+        </div>
     </div>
 </template>

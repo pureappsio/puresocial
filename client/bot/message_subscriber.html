@@ -1,0 +1,16 @@
+<template name='messageSubscriber'>
+    <div class='row'>
+    <div class="col-md-2"></div>
+        <div class="col-md-8 col-centered">
+            <h3>Talking with {{first_name}} {{last_name}}</h3>
+            <img class='subscriber-img-big img-fluid' src='{{profile_pic}}'>
+        </div>
+    </div>
+    {{> messageBuilder}}
+    <div class='row'>
+        <div class="col-md-2"></div>
+        <div class='col-md-8'>
+            <button id='send-message' class='btn btn-block btn-primary'>Send Message</button>
+        </div>
+    </div>
+</template>

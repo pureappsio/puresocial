@@ -5,7 +5,14 @@ Template.broadcasts.helpers({
     },
     count: function() {
         return Subscribers.find({ serviceId: Session.get('serviceId') }).fetch().length;
+    },
+    subscribers: function() {
+        return Subscribers.find({ serviceId: Session.get('serviceId') });
     }
+
+});
+
+Template.broadcasts.onRendered(function() {
 
 });
 
@@ -18,13 +25,21 @@ Template.broadcasts.events({
     },
     'click #send-broadcast': function() {
 
-        var message = {
-            serviceId: $('#service-id :selected').val(),
-            message: $('#broadcast-text').val(),
-            userId: Meteor.user()._id
-        }
+        var message = Session.get('messageData');
+        message.serviceId = $('#service-id :selected').val();
+        message.userId = Meteor.user()._id;
 
         Meteor.call('sendMessengerBroadcast', message);
+
+    },
+    'click #send-test': function() {
+
+        var message = Session.get('messageData');
+        message.serviceId = $('#service-id :selected').val();
+        message.messengerId = $('#test-user :selected').val();
+        message.userId = Meteor.user()._id;
+
+        Meteor.call('sendMessengerIndividual', message);
 
     }
 

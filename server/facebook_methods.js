@@ -83,7 +83,7 @@ Meteor.methods({
         console.log(token);
 
         // Add social tag
-        post.content = Meteor.call('addSocialTag', post.content);
+        post.content = Meteor.call('addSocialTag', post.content, 'facebook');
 
         // Post
         if (post.picture) {
@@ -145,7 +145,7 @@ Meteor.methods({
         console.log(service);
 
         // Add social tag
-        post.content = Meteor.call('addSocialTag', post.content);
+        post.content = Meteor.call('addSocialTag', post.content, 'facebook');
 
         // Image present ?
         if (post.picture) {
