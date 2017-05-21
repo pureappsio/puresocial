@@ -85,54 +85,51 @@ Meteor.methods({
         // Add social tag
         post.content = Meteor.call('addSocialTag', post.content, 'facebook');
 
-        // Post
+        // Add social tag
+        post.content = Meteor.call('addSocialTag', post.content, 'facebook');
+
+        // Find link
+        var isLinkPresent = Meteor.call('isLinkPresent', post.content);
+
+        if (isLinkPresent) {
+
+            var url = Meteor.call('linkify', post.content);
+
+            // Post
+            var wallPost = {
+                message: post.content,
+                link: url
+            };
+
+        } else {
+
+            // Post
+            var wallPost = {
+                message: post.content
+            };
+
+        }
+
+        // Image present ?
         if (post.picture) {
 
             // Load picture
             console.log('Posting FB picture');
             var imgUrl = Images.findOne(post.picture).versions.original.meta.pipeFrom;
 
-            // Post
-            var pictureData = {
-                url: imgUrl,
-                message: post.content
-            };
+            // Insert picture
+            wallPost.picture = imgUrl;
 
-            FacebookAPI.post('me/photos?access_token=' + token, pictureData, function(err, res) {
-
-                // Returns the post id
-                console.log(res); // { id: xxxxx}
-
-            });
-
-        } else {
-
-            // Find link
-            var isLinkPresent = Meteor.call('isLinkPresent', post.content);
-
-            if (isLinkPresent) {
-                var url = Meteor.call('linkify', post.content);
-
-                // Post
-                var wallPost = {
-                    message: post.content,
-                    link: url
-                };
-            } else {
-
-                // Post
-                var wallPost = {
-                    message: post.content
-                };
-
-            }
-
-            // Post on FB
-            FacebookAPI.post("me/feed?access_token=" + token, wallPost, function(err, res) {
-                // returns the post id
-                console.log(res); // { id: xxxxx}
-            });
         }
+
+        console.log(wallPost);
+
+        // Post on FB
+        FacebookAPI.post("me/feed?access_token=" + token, wallPost, function(err, res) {
+            // returns the post id
+            console.log(res); // { id: xxxxx}
+        });
+
 
     },
     postOnFacebookPage: function(post) {
@@ -147,6 +144,32 @@ Meteor.methods({
         // Add social tag
         post.content = Meteor.call('addSocialTag', post.content, 'facebook');
 
+        // Find link
+        var isLinkPresent = Meteor.call('isLinkPresent', post.content);
+
+        if (isLinkPresent) {
+
+            // Get URL
+            var url = Meteor.call('linkify', post.content);
+
+            // Remove URL from message
+            post.content = (post.content).replace(url, "");
+
+            // Post
+            var wallPost = {
+                message: post.content,
+                link: url
+            };
+
+        } else {
+
+            // Post
+            var wallPost = {
+                message: post.content
+            };
+
+        }
+
         // Image present ?
         if (post.picture) {
 
@@ -154,50 +177,18 @@ Meteor.methods({
             console.log('Posting FB picture');
             var imgUrl = Images.findOne(post.picture).versions.original.meta.pipeFrom;
 
-            // Post
-            var pictureData = {
-                url: imgUrl,
-                message: post.content
-            };
+            // Insert picture
+            wallPost.picture = imgUrl;
 
-            FacebookAPI.post(pageId + "/photos?access_token=" + token, pictureData, function(err, res) {
-
-                // Returns the post id
-                if (err) { console.log(err); }
-                console.log(res); // { id: xxxxx}
-
-            });
-
-        } else {
-
-            // Find link
-            var isLinkPresent = Meteor.call('isLinkPresent', post.content);
-
-            if (isLinkPresent) {
-
-                var url = Meteor.call('linkify', post.content);
-
-                // Post
-                var wallPost = {
-                    message: post.content,
-                    link: url
-                };
-            } else {
-
-                // Post
-                var wallPost = {
-                    message: post.content
-                };
-
-            }
-
-            // Post on FB
-            FacebookAPI.post(pageId + "/feed?access_token=" + token, wallPost, function(err, res) {
-                // returns the post id
-                if (err) { console.log(err); }
-                console.log(res); // { id: xxxxx}
-            });
         }
+
+        console.log(wallPost);
+
+        // Post on FB
+        FacebookAPI.post(pageId + "/feed?access_token=" + token, wallPost, function(err, res) {
+            // returns the post id
+            console.log(res); // { id: xxxxx}
+        });
     },
 
     isLinkPresent: function(variable) {

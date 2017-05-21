@@ -9,6 +9,18 @@ Future = Npm.require('fibers/future');
 
 Meteor.methods({
 
+    createMessage: function(message) {
+
+        console.log(message);
+        Messages.insert(message);
+
+    },
+    createSequence: function(sequence) {
+
+        console.log(sequence);
+        Sequences.insert(sequence);
+
+    },
     deleteSubscriber: function(subscriberId) {
 
         Subscribers.remove(subscriberId);
@@ -392,6 +404,7 @@ Meteor.methods({
             console.log(automations);
 
             answered = false;
+            automationIndex = 0;
             for (a in automations) {
 
                 var automation = automations[a];
@@ -402,6 +415,7 @@ Meteor.methods({
                         console.log('Matching keyword: ' + keywords[k]);
                         answer = automation.message;
                         answered = true;
+                        automationIndex = a;
                     }
                 }
             }
@@ -413,20 +427,23 @@ Meteor.methods({
 
             if (answered) {
 
-                // Add social tag
-                answer = Meteor.call('addSocialTag', answer, 'messenger');
+                // Answer
                 console.log('Answer: ' + answer);
-
-                var messageData = {
-                    recipient: {
-                        id: senderID
-                    },
-                    message: {
-                        text: answer
-                    }
-                };
-
+                var messageData = Meteor.call('buildMessageData', senderID, answer);
                 Meteor.call('sendMessengerMessage', service, messageData);
+
+                // Check for actions
+                var selectedAutomation = automations[automationIndex];
+                if (selectedAutomation.action) {
+
+                    // Subscribe
+                    if (selectedAutomation.action.type == 'subscribe') {
+
+                        Meteor.call('assignSequenceSubscriber', subscriber.messengerId, selectedAutomation.action.parameter);
+
+                    }
+
+                }
 
             }
 
@@ -435,6 +452,78 @@ Meteor.methods({
         // else if (messageAttachments) {
         //     sendTextMessage(senderID, "Message with attachment received");
         // }
+
+    },
+    assignSequenceSubscriber: function(messengerId, sequenceId) {
+
+        // Assign sequence
+
+        // Put first message in queue
+        var message = Messages.findOne({ sequenceId: sequenceId });
+        Meteor.call('addMessengerQueue', messengerId, message._id);
+
+    },
+    deleteMessengerQueue: function(queueId) {
+
+        MessengerQueues.remove(queueId);
+
+    },
+    deleteMessage: function(messageId) {
+
+        Messages.remove(messageId);
+
+    },
+    postMessengerQueues: function() {
+
+        var queues = MessengerQueues.find({}, { sort: { date: 1 } }).fetch();
+
+        for (i in queues) {
+
+            // Queue
+            queue = queues[i];
+
+            // Check if it can be sent
+            var now = new Date();
+            if (((queue.date).getTime() - now.getTime()) < 0) {
+
+                console.log('Sending messenger message');
+
+                // Send
+                Meteor.call('sendMessengerIndividual', queue);
+
+                // Remove from queue
+                MessengerQueues.remove(queue._id);
+
+            }
+
+        }
+
+    },
+    addMessengerQueue: function(messengerId, messageId) {
+
+        var message = Messages.findOne(messageId);
+        var queue = message;
+        queue.messengerId = messengerId;
+
+        // Calculate date
+        var date = new Date();
+        if (message.delayType == 'days') {
+            date = new Date(date.getTime() + parseInt(message.delay) * 24 * 3600 * 1000);
+        }
+        if (message.delayType == 'hours') {
+            date = new Date(date.getTime() + parseInt(message.delay) * 3600 * 1000);
+        }
+        if (message.delayType == 'minutes') {
+            date = new Date(date.getTime() + parseInt(message.delay) * 60 * 1000);
+        }
+        if (message.delayType == 'seconds') {
+            date = new Date(date.getTime() + parseInt(message.delay) * 1000);
+        }
+
+        queue.date = date;
+
+        console.log(queue);
+        MessengerQueues.insert(queue);
 
     },
     sendMessengerMessage: function(service, messageData) {

@@ -5,6 +5,11 @@ Template.settings.events({
     //     Meteor.call('updateFacebookPagesTokens');
 
     // },
+    'click #generate-key': function() {
+
+        Meteor.call('generateApiKey');
+
+    },
     'click #add-integration': function() {
 
         var accountData = {
@@ -88,6 +93,9 @@ Template.settings.helpers({
     },
     getFacebookPages: function() {
         return Services.find({ type: 'facebookPage' });
+    },
+    key: function() {
+        return Meteor.user().apiKey;
     }
 
 });

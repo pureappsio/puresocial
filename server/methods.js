@@ -10,6 +10,18 @@ categories = [{ name: 'blogPosts' },
 
 Meteor.methods({
 
+    validateApiKey: function(key) {
+
+        var adminUser = Meteor.users.findOne({ apiKey: { $exists: true } });
+
+        if (adminUser.apiKey == key) {
+            return true;
+        } else {
+            return false;
+        }
+
+    },
+
     addSocialTag: function(content, type) {
 
         var urlRegex = /(https?:\/\/[^\s]+)/g;

@@ -74,11 +74,11 @@ h3 {
 }
 
 .voffset30 {
-    margin-top: 30px;
+    margin-top: 30px !important;
 }
 
 .voffset50 {
-    margin-top: 50px;
+    margin-top: 50px !important;;
 }
 
 .completed {

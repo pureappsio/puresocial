@@ -18,6 +18,10 @@ Tracker.autorun(function() {
     Meteor.subscribe('userSubscribers');
     Meteor.subscribe('userIntegrations');
     Meteor.subscribe('files.images.all');
+    Meteor.subscribe('userSequences');
+    Meteor.subscribe('userMessages');
+     Meteor.subscribe('allUsers');
+     Meteor.subscribe('userMessengerQueues');
 });
 
 // Imports

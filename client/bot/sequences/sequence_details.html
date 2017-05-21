@@ -1,0 +1,44 @@
+<template name='sequenceDetails'>
+    <div class='row'>
+        <div class="col-md-2"></div>
+        <div class="col-md-6">
+            <h3>{{name}}</h3>
+        </div>
+    </div>
+    <div class='row'>
+        <div class="col-md-2"></div>
+        <div class="col-md-6">
+            <input type="text" placeholder='Message name ...' id="message-name" class='form-control'>
+        </div>
+        <div class="col-md-1">
+            <select id='delay' class='form-control'>
+                {{#each number in numbers}}
+                    <option value="{{number.number}}">{{number.number}}</option>
+                {{/each}}
+            </select>
+        </div>
+        <div class="col-md-1">
+            <select id='delay-type' class='form-control'>
+                <option value="days">days</option>
+                <option value="hours">hours</option>
+                <option value="minutes">minutes</option>
+                <option value="seconds">seconds</option>
+            </select>
+        </div>
+    </div>
+    {{> messageBuilder}}
+    <div class='row'>
+        <div class="col-md-2"></div>
+        <div class="col-md-8">
+            <button class='btn btn-primary btn-block' id='create-message'>Create Message</button>
+        </div>
+    </div>
+    <div class='voffset30'></div>
+    {{#each messages}}{{> message}}{{/each}}
+    <div class='row voffset30'>
+        <div class="col-md-4"></div>
+        <div class="col-md-4">
+            <a class='btn btn-primary btn-block' href='/sequences'>Come Back</a>
+        </div>
+    </div>
+</template>

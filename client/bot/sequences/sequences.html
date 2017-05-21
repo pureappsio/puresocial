@@ -1,0 +1,43 @@
+<template name='sequences'>
+    <div class='row'>
+        <div class="col-md-2"></div>
+        <div class="col-md-8">
+            <h3>Sequences</h3>
+        </div>
+    </div>
+    <div class='row'>
+        <div class="col-md-2"></div>
+        <div class="col-md-8">
+            <label>Facebook Page</label>
+            <select id='service-id' class="form-control">
+                {{#each services}}{{> serviceListing}}{{/each}}
+            </select>
+        </div>
+    </div>
+    <div class='row'>
+        <div class="col-md-2"></div>
+        <div class="col-md-4">
+            <input type="text" placeholder='Sequence name ...' id="sequence-name" class='form-control'>
+        </div>
+        <div class="col-md-4">
+            <button id="create-sequence" class='btn btn-primary btn-block'>Create New Sequence</button>
+        </div>
+    </div>
+    {{#each sequences}}{{> sequence}}{{/each}}
+    <div class='row voffset50'>
+        <div class="col-md-2"></div>
+        <div class="col-md-3">
+            <select id='subscriber-id' class="form-control">
+                {{#each subscribers}}{{> subscriberOption}}{{/each}}
+            </select>
+        </div>
+        <div class="col-md-3">
+            <select id='sequence-id' class="form-control">
+                {{#each sequences}}{{> sequenceOption}}{{/each}}
+            </select>
+        </div>
+        <div class="col-md-2">
+            <button id="assign-sequence" class='btn btn-primary btn-block'>Assign Sequence</button>
+        </div>
+    </div>
+</template>

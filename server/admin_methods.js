@@ -1,11 +1,30 @@
 Meteor.methods({
 
+    generateApiKey: function() {
+
+        // Check if key exist
+        if (!Meteor.user().apiKey) {
+
+            // Generate key
+            var key = "";
+            var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+            for (var i = 0; i < 16; i++) {
+                key += possible.charAt(Math.floor(Math.random() * possible.length));
+            }
+            console.log(key);
+
+            // Update user
+            Meteor.users.update(Meteor.user()._id, { $set: { apiKey: key } });
+        }
+
+    },
+
     isPixel: function() {
 
         if (Meteor.settings.facebookPixel) {
             return true;
-        }
-        else {
+        } else {
             return false;
         }
 

@@ -4,15 +4,27 @@
             <h3>Library</h3></div>
     </div>
     <div class="row">
+        <div class='col-md-4'>
+            <select id='service-filter' class='form-control'>
+                <option value="all">All Services</option>
+                {{#each socialMediaChoices}} {{> selectService}} {{/each}}
+            </select>
+        </div>
+        <div class='col-md-4'>
+            <select id='category-filter' class='form-control'>
+                <option value="all">All Categories</option>
+                {{#each getCategories}} {{> selectCategory}} {{/each}}
+            </select>
+        </div>
+    </div>
+    <div class="row">
         <div class="col-md-1 column-title"></div>
         <div class="col-md-3 column-title">Content</div>
         <div class="col-md-2 column-title">Category</div>
         <div class="col-md-3 column-title">Media</div>
     </div>
-    <div class="posts">
-        {{#each posts}} {{> postItem}} {{/each}}
-    </div>
-    <div class="row voffset30">
+    {{#each posts}} {{> postItem}} {{/each}}
+    <!--  <div class="row voffset30">
         <div class='col-md-2'></div>
         <div class='col-md-8'>
             <button id='show-filter' class='btn btn-lg btn-block btn-warning'>Hide Filters</button>
@@ -25,5 +37,5 @@
     <div class="row">
         {{#each socialMediaChoices}} {{> socialMediaChoice}} {{/each}}
     </div>
-    {{/if}}
+    {{/if}} -->
 </template>

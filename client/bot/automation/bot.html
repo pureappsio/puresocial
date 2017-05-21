@@ -21,11 +21,21 @@
             <input class='form-control' id="keywords">
         </div>
     </div>
+    {{> messageBuilder}}
     <div class='row'>
         <div class="col-md-2"></div>
-        <div class='col-md-8'>
-            <label for='bot-text'>Bot Answer</label>
-            <textarea class='form-control' id='bot-text' rows="4" cols="50"></textarea>
+        <div class='col-md-4'>
+            <select class="form-control" id='action-type'>
+                <option value='noaction'>No Action</option>
+                <option value='subscribe'>Subscribe to Sequence</option>
+            </select>
+        </div>
+        <div class='col-md-4'>
+            <div id='action-container'>
+                <select class="form-control" id='action-parameter'>
+                    {{#each sequences}} {{> sequenceOption}} {{/each}}
+                </select>
+            </div>
         </div>
     </div>
     <div class='row'>

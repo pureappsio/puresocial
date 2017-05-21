@@ -1,5 +1,19 @@
 Template.queueElement.helpers({
 
+    pictureLink: function() {
+
+        if (this.picture) {
+            return Images.findOne(this.picture).link();
+        }
+
+    },
+    isPicturePresent: function() {
+        if (this.picture) {
+            return true;
+        } else {
+            return false;
+        }
+    },
     formatDate: function(date) {
         theDate = new Date(date);
         localDate = new Date(theDate.toLocaleString());
