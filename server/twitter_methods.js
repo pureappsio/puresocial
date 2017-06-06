@@ -65,12 +65,65 @@ Meteor.methods({
         Services.remove(accountId);
 
     },
+    getTwitterFollowers: function(serviceId) {
+
+        // Get data
+        var service = Services.findOne(serviceId);
+        var token = service.accessToken;
+        var token_secret = service.accessTokenSecret;
+
+        // Init client
+        if (process.env.ROOT_URL == "http://localhost:3000/") {
+            var client = new TwitterAPI({
+                consumer_key: Meteor.settings.twitterLocal.consumer_key,
+                consumer_secret: Meteor.settings.twitterLocal.consumer_secret,
+                access_token_key: token,
+                access_token_secret: token_secret
+            });
+        } else {
+            var client = new TwitterAPI({
+                consumer_key: Meteor.settings.twitterOnline.consumer_key,
+                consumer_secret: Meteor.settings.twitterOnline.consumer_secret,
+                access_token_key: token,
+                access_token_secret: token_secret
+            });
+        }
+
+        // Get followers
+        var myFuture = new Future();
+        client.get('followers/ids', function(error, tweet, response) {
+            if (error) throw error;
+            var result = JSON.parse(response.body);
+            myFuture.return(result.ids.length);
+        });
+
+        return myFuture.wait();
+
+    },
     postOnTwitter: function(post) {
 
         console.log('Posting on Twitter');
 
         // Add social tag
         post.content = Meteor.call('addSocialTag', post.content, 'twitter');
+
+        // Switch ID for library ID
+        if (post.libraryId) {
+            post._id = post.libraryId;
+        }
+
+        // Replace link
+        var isLinkPresent = Meteor.call('isLinkPresent', post.content);
+
+        if (isLinkPresent) {
+
+            var url = Meteor.call('linkify', post.content);
+            var link = Meteor.call('shortenLink', post);
+
+            // Replace URL
+            post.content = (post.content).replace(url, link);
+
+        }
 
         var service = Services.findOne(post.serviceId);
         var token = service.accessToken;

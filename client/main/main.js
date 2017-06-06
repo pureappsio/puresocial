@@ -20,8 +20,9 @@ Tracker.autorun(function() {
     Meteor.subscribe('files.images.all');
     Meteor.subscribe('userSequences');
     Meteor.subscribe('userMessages');
-     Meteor.subscribe('allUsers');
-     Meteor.subscribe('userMessengerQueues');
+    Meteor.subscribe('allUsers');
+    Meteor.subscribe('userMessengerQueues');
+    Meteor.subscribe('userStats');
 });
 
 // Imports

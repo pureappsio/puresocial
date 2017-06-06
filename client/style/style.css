@@ -4,6 +4,14 @@
     text-align: center;
 }
 
+.row-title {
+    font-weight: bold;
+}
+
+.badge {
+    font-size: 18px !important;
+}
+
 .subscriber-img {
     max-width: 30px !important;
 }
@@ -75,6 +83,9 @@ h3 {
 
 .voffset30 {
     margin-top: 30px !important;
+}
+.voffset15 {
+    margin-top: 15px !important;
 }
 
 .voffset50 {

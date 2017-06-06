@@ -12,6 +12,7 @@ Template.admin.helpers({
     getActiveTotalRatio: function() {
         return (Session.get('totalActiveUsers') / Session.get('totalUsers')).toFixed(2);
     }
+
 });
 
 Template.admin.rendered = function() {
@@ -30,6 +31,11 @@ Template.admin.rendered = function() {
 
 Template.admin.events({
 
+    'click #refresh-stats': function() {
+
+        Meteor.call('refreshStats');
+
+    },
     'click #test': function() {
         Meteor.call('apiTest');
     },

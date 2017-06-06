@@ -1,0 +1,14 @@
+<template name='statistics'>
+    <h3>Statistics</h3>
+    <div class='row row-title voffset30'>
+        <div class="col-md-3">Name</div>
+        <div class="col-md-3">Medium</div>
+        <div class="col-md-3">
+            Followers
+        </div>
+        <div class="col-md-3">
+            Clicks
+        </div>
+    </div>
+    {{#each services}} {{> serviceStats}} {{/each}}
+</template>

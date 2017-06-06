@@ -22,6 +22,18 @@ SyncedCron.add({
     }
 });
 
+// Stats
+SyncedCron.add({
+    name: 'Refresh stats',
+    schedule: function(parser) {
+        // parser is a later.parse object
+        return parser.text('every 1 day');
+    },
+    job: function() {
+        Meteor.call('refreshStats');
+    }
+});
+
 SyncedCron.config({
     log: false
 });

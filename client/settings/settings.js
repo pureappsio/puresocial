@@ -47,7 +47,7 @@ Template.settings.events({
     },
     'click #link-facebook': function() {
 
-        Facebook.requestCredential({ requestPermissions: ['publish_pages', 'manage_pages'] }, function(token) {
+        Facebook.requestCredential({ requestPermissions: ['read_insights', 'publish_pages', 'manage_pages'] }, function(token) {
 
             var secret = Package.oauth.OAuth._retrieveCredentialSecret(token);
 

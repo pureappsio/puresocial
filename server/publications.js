@@ -39,9 +39,12 @@ if (Meteor.isServer) {
         return Messages.find({ userId: this.userId });
     });
 
-
     Meteor.publish("userServices", function() {
         return Services.find({ userId: this.userId });
+    });
+
+    Meteor.publish("userStats", function() {
+        return Stats.find({ userId: this.userId });
     });
 
     Meteor.publish("userAutomations", function() {

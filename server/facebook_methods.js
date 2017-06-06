@@ -1,10 +1,59 @@
 import FacebookAPI from 'fbgraph';
-FacebookAPI.setVersion("2.8");
+FacebookAPI.setVersion("2.9");
+Future = Npm.require('fibers/future');
 
 import fs from 'fs';
 
 Meteor.methods({
 
+    getFacebookPageInsights: function(serviceId) {
+
+        // Get service
+        var service = Services.findOne(serviceId);
+        var token = service.access_token;
+        var pageId = service.id;
+
+        console.log('Getting facebook data');
+
+        var params = { metric: 'page_positive_feedback_by_type,page_impressions_unique,page_fan_adds_unique', period: 'week' };
+
+        // Get pages
+        var myFuture = new Future();
+        FacebookAPI.get(pageId + "/insights?access_token=" + token, params, function(err, res) {
+
+            if (err) { console.log(err); }
+            console.log(res.data);
+            myFuture.return(res.data);
+
+        });
+
+        return myFuture.wait();
+
+    },
+
+    getFacebookPageStat: function(serviceId) {
+
+        // Get service
+        var service = Services.findOne(serviceId);
+        var token = service.access_token;
+        var pageId = service.id;
+
+        console.log('Getting facebook data');
+
+        var params = { fields: "fan_count" };
+
+        // Get pages
+        var myFuture = new Future();
+        FacebookAPI.get(pageId + "?access_token=" + token, params, function(err, res) {
+
+            if (err) { console.log(err); }
+            console.log(res);
+            myFuture.return(res);
+        });
+
+        return myFuture.wait();
+
+    },
     userAddFacebookOauthCredentials: function(token, secret) {
 
         var service = Facebook.retrieveCredential(token, secret).serviceData;
@@ -80,10 +129,10 @@ Meteor.methods({
         var service = Services.findOne(post.serviceId)
         var token = service.accessToken;
 
-        console.log(token);
-
-        // Add social tag
-        post.content = Meteor.call('addSocialTag', post.content, 'facebook');
+        // Switch ID for library ID
+        if (post.libraryId) {
+            post._id = post.libraryId;
+        }
 
         // Add social tag
         post.content = Meteor.call('addSocialTag', post.content, 'facebook');
@@ -93,12 +142,14 @@ Meteor.methods({
 
         if (isLinkPresent) {
 
-            var url = Meteor.call('linkify', post.content);
+            // var url = Meteor.call('linkify', post.content);
+
+            var link = Meteor.call('shortenLink', post);
 
             // Post
             var wallPost = {
                 message: post.content,
-                link: url
+                link: link
             };
 
         } else {
@@ -141,6 +192,11 @@ Meteor.methods({
 
         console.log(service);
 
+        // Switch ID for library ID
+        if (post.libraryId) {
+            post._id = post.libraryId;
+        }
+
         // Add social tag
         post.content = Meteor.call('addSocialTag', post.content, 'facebook');
 
@@ -151,6 +207,7 @@ Meteor.methods({
 
             // Get URL
             var url = Meteor.call('linkify', post.content);
+            var link = Meteor.call('shortenLink', post);
 
             // Remove URL from message
             post.content = (post.content).replace(url, "");
@@ -158,7 +215,7 @@ Meteor.methods({
             // Post
             var wallPost = {
                 message: post.content,
-                link: url
+                link: link
             };
 
         } else {

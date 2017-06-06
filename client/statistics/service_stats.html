@@ -1,0 +1,12 @@
+<template name='serviceStats'>
+    <div class='row voffset30'>
+        <div class="col-md-3"><a href='/stats/{{_id}}'>{{name}}</a></div>
+        <div class="col-md-3"><span class='badge badge-{{colorType type}}'>{{formatType type}}</span></div>
+        <div class="col-md-3">
+        	{{followers}}
+        </div>
+         <div class="col-md-3">
+        	{{clicks}}
+        </div>
+    </div>
+</template>

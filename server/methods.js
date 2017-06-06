@@ -10,6 +10,11 @@ categories = [{ name: 'blogPosts' },
 
 Meteor.methods({
 
+    shortenLink: function(post) {
+
+        return Meteor.absoluteUrl() + 'link/' + post._id + '?service=' + post.serviceId;
+
+    },
     validateApiKey: function(key) {
 
         var adminUser = Meteor.users.findOne({ apiKey: { $exists: true } });

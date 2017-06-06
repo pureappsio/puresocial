@@ -18,6 +18,32 @@ Handlebars.registerHelper('getCategoryName', function(category) {
 
 });
 
+Handlebars.registerHelper('formatType', function(type) {
+
+    if (type == 'facebookPage') {
+        return "Facebook Page";
+    }
+    if (type == 'facebook') {
+        return "Facebook";
+    }
+    if (type == 'twitter') {
+        return "Twitter";
+    }
+
+});
+
+Handlebars.registerHelper('colorType', function(type) {
+
+    if (type == 'facebookPage' || type == 'facebook') {
+        return "primary";
+    }
+
+    if (type == 'twitter') {
+        return "info";
+    }
+
+});
+
 Handlebars.registerHelper('formatDate', function(date) {
 
     return date.getDate();
