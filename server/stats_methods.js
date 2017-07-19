@@ -3,7 +3,7 @@ Meteor.methods({
     refreshStats: function() {
 
         // Get users
-        Meteor.users.find({}).fetch().forEach(function(user) {
+        Meteor.users.find({ role: { $ne: 'teamuser' } }).fetch().forEach(function(user) {
 
             // Posting all queue items that needs to be posted
             console.log('Refreshing stats started for user: ' + user.username);
@@ -29,9 +29,12 @@ Meteor.methods({
             if (service.type == 'facebookPage') {
                 var followers = Meteor.call('getFacebookPageStat', service._id);
                 followers = followers.fan_count;
-            } 
+            }
             if (service.type == 'twitter') {
                 var followers = Meteor.call('getTwitterFollowers', service._id);
+            }
+            if (service.type == 'instagram') {
+                var followers = Meteor.call('getInstagramFollowers', service._id);
             }
 
             stat = {

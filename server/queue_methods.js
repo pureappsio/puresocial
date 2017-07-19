@@ -7,7 +7,7 @@ Meteor.methods({
     postAllQueues: function() {
 
         // Get users
-        Meteor.users.find({}).fetch().forEach(function(user) {
+        Meteor.users.find({ role: { $ne: 'teamuser' } }).fetch().forEach(function(user) {
 
             // Posting all queue items that needs to be posted
             console.log('Auto-posting started for user: ' + user.username);
@@ -71,15 +71,6 @@ Meteor.methods({
             // Post on Facebook
             Meteor.call('postOnFacebook', queue_item);
 
-            // Remove from queue
-            Queues.remove(queue_item._id);
-            console.log('Removed item from queue');
-
-            // Remove if use once category
-            if (queue_item.category == 'useOnce') {
-                Posts.remove(queue_item.libraryId);
-            }
-
         }
 
         // Facebook pages
@@ -88,14 +79,13 @@ Meteor.methods({
             // Post on Facebook
             Meteor.call('postOnFacebookPage', queue_item);
 
-            // Remove from queue
-            Queues.remove(queue_item._id);
-            console.log('Removed item from queue');
+        }
 
-            // Remove if use once category
-            if (queue_item.category == 'useOnce') {
-                Posts.remove(queue_item.libraryId);
-            }
+        // Facebook groups
+        if (service.type == 'facebookGroup') {
+
+            // Post on Facebook
+            Meteor.call('postOnFacebookGroup', queue_item);
 
         }
 
@@ -105,15 +95,23 @@ Meteor.methods({
             // Post on Twitter
             Meteor.call('postOnTwitter', queue_item);
 
-            // Remove from queue
-            Queues.remove(queue_item._id);
-            console.log('Removed item from queue');
+        }
 
-            // Remove if use once category
-            if (queue_item.category == 'useOnce') {
-                Posts.remove(queue_item.libraryId);
-            }
+        // Pinterest
+        if (service.type == 'pinterest') {
 
+            // Post on Pinterest
+            Meteor.call('postPin', queue_item);
+
+        }
+
+        // Remove from queue
+        Queues.remove(queue_item._id);
+        console.log('Removed item from queue');
+
+        // Remove if use once category
+        if (queue_item.category == 'useOnce') {
+            Posts.remove(queue_item.libraryId);
         }
 
     },
@@ -332,22 +330,24 @@ Meteor.methods({
     }
 });
 
-// function notInQueue(item, user) {
+function notInQueue(item, user) {
 
-//     // Get all queue elements for user
-//     var queue = Queues.find({ userId: user._id }).fetch();
+    // Get all queue elements for user
+    var queue = Queues.find({ userId: user._id }).fetch();
 
-//     var notInQueue = true;
+    var notInQueue = true;
 
-//     for (i = 0; i < queue.length; i++) {
-//         if ((queue[i].content == item.content) && (queue[i].serviceId == item.media[0].platform)) {
-//             notInQueue = false;
-//         }
-//     }
+    console.log(item);
 
-//     return notInQueue;
+    for (i = 0; i < queue.length; i++) {
+        if ((queue[i].content == item.content) && (queue[i].serviceId == item.serviceId)) {
+            notInQueue = false;
+        }
+    }
 
-// }
+    return notInQueue;
+
+}
 
 function shuffle(array) {
     var counter = array.length,

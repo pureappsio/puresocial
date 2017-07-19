@@ -1,9 +1,13 @@
 <template name='postItem'>
-    
     <div class="row">
         <div class="col-md-1 col-centered">
             {{#if isPicturePresent}}
-            <img class='img-fluid' src='{{pictureLink}}'> {{/if}}
+                <img class='img-fluid' src='{{pictureLink}}'> 
+            {{/if}}
+
+            {{#if isVideo}}
+               <img class='img-fluid' src='{{videoLink}}'> 
+            {{/if}}
         </div>
         <div class="col-md-3">{{formatContent content}}</div>
         <div class="col-md-2">{{getCategoryName category}}</div>
@@ -18,5 +22,4 @@
             <button class='btn btn-warning post'>Post</button>
         </div>
     </div>
-    
 </template>

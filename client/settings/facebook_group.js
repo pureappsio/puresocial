@@ -1,4 +1,4 @@
-Template.facebookPages.events({
+Template.facebookGroup.events({
 
     'click .add-page': function(event, template) {
 
@@ -6,12 +6,12 @@ Template.facebookPages.events({
         console.log(template.data);
 
         // Add profile to user profile
-        Meteor.call('userAddFacebookPage', template.data);
+        Meteor.call('userAddFacebookGroup', template.data);
     }
 
 });
 
-Template.facebookPages.helpers({
+Template.facebookGroup.helpers({
 
     isSelected: function() {
 

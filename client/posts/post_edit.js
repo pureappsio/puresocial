@@ -31,7 +31,7 @@ Template.postEdit.helpers({
     },
     socialMediaChoices: function() {
 
-        return Services.find({});
+        return Services.find({ userId: getUserId() });
     }
 
 });
@@ -85,26 +85,6 @@ Template.postEdit.rendered = function() {
 
 Template.postEdit.events({
 
-    // "change .btn-file :file": function(event, template) {
-    //     var files = event.currentTarget.files;
-    //     $('#file-name').val(files[0].name);
-
-    // },
-    // "click button.upload": function() {
-
-    //     // Get files
-    //     var files = $("input.file_bag")[0].files
-
-    //     // Upload
-    //     S3.upload({
-    //         files: files,
-    //         path: "pictures"
-    //     }, function(e, r) {
-    //         console.log('Callback: ');
-    //         console.log(r);
-    //         Session.set('uploadedFile', r.url);
-    //     });
-    // },
     'keyup #postContent': function() {
 
         // Get number character

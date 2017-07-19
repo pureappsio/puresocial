@@ -3,6 +3,10 @@
     <div class='row'>
         {{#each selectFacebookPages}} {{> facebookPages}} {{/each}}
     </div>
+    <h3>Link New Facebook Group</h3>
+    <div class='row'>
+        {{#each selectFacebookGroups}} {{> facebookGroup}} {{/each}}
+    </div>
     <div class='row'>
         <div class='col-md-4'>
             <a href="{{pathFor 'settings'}}">

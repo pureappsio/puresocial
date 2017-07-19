@@ -2,7 +2,7 @@ Template.library.helpers({
 
     posts: function() {
 
-        var query = {};
+        var query = { userId: getUserId() };
 
         if (Session.get('categoryFilter')) {
             if (Session.get('categoryFilter') != 'all') {
@@ -16,10 +16,6 @@ Template.library.helpers({
             }
         }
 
-        console.log(query);
-
-        console.log(Posts.find(query).fetch());
-
         return Posts.find(query);
     },
     getCategories: function() {
@@ -27,7 +23,7 @@ Template.library.helpers({
     },
     socialMediaChoices: function() {
 
-        return Services.find({});
+        return Services.find({ userId: getUserId() });
 
     }
 

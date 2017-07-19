@@ -68,6 +68,12 @@ Meteor.methods({
 
             console.log('Already existing Facebook data');
 
+            // Update token
+            Services.update({
+                type: 'facebook',
+                userId: Meteor.user()._id
+            }, { $set: { accessToken: service.accessToken } });
+
         } else {
             Services.insert(service);
         }
@@ -84,6 +90,23 @@ Meteor.methods({
         if (Services.findOne({ name: service.name, type: 'facebookPage', userId: Meteor.user()._id })) {
 
             console.log('Already existing Facebook Page data');
+
+        } else {
+            Services.insert(service);
+        }
+
+    },
+    userAddFacebookGroup: function(service) {
+
+        service.userId = Meteor.user()._id;
+        service.type = 'facebookGroup';
+
+        console.log(service);
+
+        // Check if exists
+        if (Services.findOne({ name: service.name, type: 'facebookGroup', userId: Meteor.user()._id })) {
+
+            console.log('Already existing Facebook Group data');
 
         } else {
             Services.insert(service);
@@ -112,6 +135,34 @@ Meteor.methods({
 
     },
 
+    getFacebookGroups: function() {
+
+        // Find token
+        var service = Services.findOne({ type: 'facebook', userId: Meteor.user()._id })
+        var token = service.accessToken;
+
+        console.log('Getting facebook groups');
+
+        // Get groups
+        var groups = Async.runSync(function(done) {
+            FacebookAPI.get("me/groups?access_token=" + token, function(err, res) {
+
+                if (err) { console.log(err); }
+                console.log(res.data);
+                done(null, res.data);
+
+            });
+        });
+
+        return groups.result;
+
+    },
+    // getFacebookPagesGroups: function() {
+
+    //     var groups = Meteor.call('getFacebookGroups');
+    //     var pages = Meteor.call('getFacebookPages');
+
+    // },
     deleteFacebookPage: function(serviceId) {
 
         Services.remove(serviceId)
@@ -243,6 +294,75 @@ Meteor.methods({
 
         // Post on FB
         FacebookAPI.post(pageId + "/feed?access_token=" + token, wallPost, function(err, res) {
+            // returns the post id
+            console.log(res); // { id: xxxxx}
+        });
+    },
+
+    postOnFacebookGroup: function(post) {
+
+        // Get token and page ID        
+        var service = Services.findOne(post.serviceId);
+
+        var facebookProfile = Services.findOne({ type: 'facebook', userId: service.userId });
+
+        var token = facebookProfile.accessToken;
+        var groupId = service.id;
+
+        // Switch ID for library ID
+        if (post.libraryId) {
+            post._id = post.libraryId;
+        }
+
+        // Add social tag
+        post.content = Meteor.call('addSocialTag', post.content, 'facebook');
+
+        // Find link
+        var isLinkPresent = Meteor.call('isLinkPresent', post.content);
+
+        if (isLinkPresent) {
+
+            // Get URL
+            var url = Meteor.call('linkify', post.content);
+            var link = Meteor.call('shortenLink', post);
+
+            // Remove URL from message
+            post.content = (post.content).replace(url, "");
+
+            // Post
+            var wallPost = {
+                message: post.content,
+                link: link
+            };
+
+        } else {
+
+            // Post
+            var wallPost = {
+                message: post.content
+            };
+
+        }
+
+        // Image present ?
+        if (post.picture) {
+
+            // Load picture
+            console.log('Posting FB picture');
+            var imgUrl = Images.findOne(post.picture).versions.original.meta.pipeFrom;
+
+            // Insert picture
+            wallPost.picture = imgUrl;
+
+        }
+
+        console.log(wallPost);
+
+        // Post on FB
+        var url = groupId + "/feed?access_token=" + token;
+        console.log(url);
+
+        FacebookAPI.post(url, wallPost, function(err, res) {
             // returns the post id
             console.log(res); // { id: xxxxx}
         });

@@ -29,13 +29,14 @@
                         <a class="dropdown-item" href="{{pathFor 'messengerQueues'}}">Queues</a>
                     </div>
                 </li>
+                <li class="nav-item"><a class="nav-link" href="{{pathFor 'instagram'}}">Instagram</a></li>
                 <li class="nav-item">
                     <a class="nav-link" href="{{pathFor 'statistics'}}">Statistics</a>
                 </li>
                 {{/if}}
             </ul>
             <ul class="navbar-nav">
-                {{#if currentUser}}
+                {{#if isAppUser}}
                 <li class="nav-item"><a class="nav-link" href="{{pathFor 'settings'}}">Settings</a></li>{{/if}} {{#if isAdmin}}
                 <li class="nav-item"><a class="nav-link" href="{{pathFor 'admin'}}">Admin</a></li>
                 {{/if}} {{#if currentUser}}

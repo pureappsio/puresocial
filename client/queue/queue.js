@@ -1,31 +1,31 @@
 Template.queue.helpers({
 
-  queue: function() {
-  	return Queues.find({}, {sort: {date: 1}});
-  }
+    queue: function() {
+        return Queues.find({ userId: getUserId() }, { sort: { date: 1 } });
+    }
 
 });
 
 Template.queue.events({
 
-  'click #generate-queue': function() {
+    'click #generate-queue': function() {
 
-    // Store in DB
-    Meteor.call('generateQueue', Meteor.user());
-      
-  },
-  'click #auto-post': function() {
+        // Store in DB
+        Meteor.call('generateQueue', getUserId());
 
-    // Store in DB
-    Meteor.call('postingQueue', Meteor.user());
-      
-  }
+    },
+    'click #auto-post': function() {
+
+        // Store in DB
+        Meteor.call('postingQueue', getUserId());
+
+    }
 
 });
 
 Template.queue.rendered = function() {
 
-  // Get time difference
-  Session.set('timeDifference', Meteor.call('getTimeDifference', Meteor.user()));
+    // Get time difference
+    Session.set('timeDifference', Meteor.call('getTimeDifference', getUserId()));
 
 }

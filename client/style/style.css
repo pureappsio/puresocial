@@ -8,6 +8,14 @@
     font-weight: bold;
 }
 
+h3 {
+    margin-top: 15px !important;
+}
+
+.facebook-button {
+    background-color: #3b5998 !important;
+}
+
 .badge {
     font-size: 18px !important;
 }

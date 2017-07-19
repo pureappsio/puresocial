@@ -19,22 +19,41 @@
     <h3>Socia Media Accounts</h3>
     <div class='row'>
         <div class="col-md-3">
-            <button id='link-twitter' class='btn btn-primary'>Link a New Twitter Account</button>
-        </div>
-        <div class="col-md-3">
-            <button id='link-facebook' class='btn btn-primary'>Link Your Facebook Account</button>
+            <button id='link-facebook' class='btn btn-block btn-primary'>Link Your Facebook Account</button>
         </div>
         <div class="col-md-3">
             <a href="{{pathFor 'addFacebookPage'}}">
-                <button class='{{isFacebookLinked}} btn btn-primary'>Link Facebook Pages</button>
+                <button class='{{isFacebookLinked}} btn btn-block btn-primary'>Link Facebook Pages & Groups</button>
             </a>
+        </div>
+        <div class="col-md-2">
+            <button id='link-twitter' class='btn btn-block btn-primary'>Link a New Twitter Account</button>
+        </div>
+        <div class="col-md-2">
+            <button id='link-pinterest' class='btn btn-block btn-primary'>Link a New Pinterest Account</button>
+        </div>
+        <div class="col-md-2">
+            <button id='link-instagram' class='btn btn-block btn-primary'>Link a New Instagram Account</button>
         </div>
         <!--    <div class="col-md-3">
             <button id='update-tokens' class='btn btn-primary'>Update Facebook Pages Tokens</button>
         </div> -->
     </div>
     <div class='voffset30'></div>
-    {{#each getTwitterAccounts}} {{> twitterProfile}} {{/each}} {{#each getFacebookAccounts}} {{> facebookProfile}} {{/each}} {{#each getFacebookPages}} {{> facebookPageItem}} {{/each}} {{getUserData}}
+    {{#each getTwitterAccounts}} {{> twitterProfile}} {{/each}} {{#each getFacebookAccounts}} {{> facebookProfile}} {{/each}} {{#each getFacebookPages}} {{> facebookPageItem}} {{/each}} {{#each getFacebookGroups}} {{> facebookGroupItem}} {{/each}} {{#each getPinterestAccounts}} {{> pinterestProfile}} {{/each}} {{#each getInstagramAccounts}} {{> instagramProfile}} {{/each}} {{getUserData}}
+    <h3>Add Team User</h3>
+    <div class='row'>
+        <div class='col-md-3'>
+            <input class='form-control' id='user-email'>
+        </div>
+        <div class='col-md-3'>
+            <input class='form-control' id='user-password'>
+        </div>
+        <div class='col-md-4'>
+            <button id='add-user' class='btn btn-primary'>Add User</button>
+        </div>
+    </div>
+    {{#each teamUsers}} {{> userDetails}} {{/each}}
     <h3>Time Zone</h3>
     <div class='row'>
         <div class='col-md-4'>

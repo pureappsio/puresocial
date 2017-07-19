@@ -30,6 +30,10 @@ Handlebars.registerHelper('formatType', function(type) {
         return "Twitter";
     }
 
+    if (type == 'instagram') {
+        return "Instagram";
+    }
+
 });
 
 Handlebars.registerHelper('colorType', function(type) {
@@ -40,6 +44,10 @@ Handlebars.registerHelper('colorType', function(type) {
 
     if (type == 'twitter') {
         return "info";
+    }
+
+    if (type == 'instagram') {
+        return "warning";
     }
 
 });
@@ -80,7 +88,16 @@ Handlebars.registerHelper('formatContent', function(content) {
 Handlebars.registerHelper('isAdmin', function() {
 
     if (Meteor.user()) {
-        if (Meteor.user().emails[0].address == 'marcolivier.schwartz@gmail.com' || Meteor.user().emails[0].address == 'admin@schwartzindustries.com') {
+        if (Meteor.user().role == 'admin') {
+            return true;
+        }
+    }
+});
+
+Handlebars.registerHelper('isAppUser', function() {
+
+    if (Meteor.user()) {
+        if (Meteor.user().role == 'admin' || Meteor.user().role == 'appuser') {
             return true;
         }
     }

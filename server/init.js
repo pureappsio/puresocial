@@ -1,5 +1,9 @@
 Meteor.startup(function() {
 
+    // SSL('/Users/marco/Documents/Software/pureapps/code/puresocial/private/server.key', '/Users/marco/Documents/Software/pureapps/code/puresocial/private/server.crt', 9000);
+
+    // process.env.ROOT_URL = 'https://localhost:9000';
+
     // Start cron
     SyncedCron.start();
 

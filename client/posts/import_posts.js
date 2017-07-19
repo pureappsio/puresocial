@@ -4,7 +4,7 @@ Template.importPosts.helpers({
         return Integrations.find({ type: 'purepress' });
     },
     socialMediaChoices: function() {
-        return Services.find({});
+        return Services.find({ userId: getUserId() });
     },
     getCategories: function() {
         return categories;

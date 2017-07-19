@@ -1,5 +1,9 @@
-// Meteor.startup(function() {
-//     Uploader.finished = function(index, fileInfo, templateContext) {
-//         console.log(fileInfo);
-//     }
-// });
+getUserId = function() {
+
+    if (Meteor.user().appUserId) {
+        return Meteor.user().appUserId;
+    } else {
+        return Meteor.user()._id;
+    }
+
+}

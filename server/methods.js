@@ -10,6 +10,7 @@ categories = [{ name: 'blogPosts' },
 
 Meteor.methods({
 
+    
     shortenLink: function(post) {
 
         return Meteor.absoluteUrl() + 'link/' + post._id + '?service=' + post.serviceId;
@@ -104,7 +105,6 @@ Meteor.methods({
     saveNewPost: function(post) {
 
         // Build post object
-        post.userId = Meteor.user()._id;
         post.submitted = new Date();
         console.log(post);
 
@@ -138,7 +138,7 @@ Meteor.methods({
     updateSchedule: function(schedule) {
 
         // Remove existing schedule if already exist
-        var result = Schedules.find({ userId: Meteor.user()._id, category: schedule.category }).fetch();
+        var result = Schedules.find({ userId: shedule.userId, category: schedule.category }).fetch();
 
         for (var i = 0; i < result.length; i++) {
             Schedules.remove(result[i]._id);
@@ -147,7 +147,6 @@ Meteor.methods({
         // Build post object
         console.log('Updating Schedule');
 
-        schedule.userId = Meteor.user()._id;
         schedule.submitted = new Date();
 
         // Save in DB
@@ -183,6 +182,12 @@ Meteor.methods({
             }
             if (service.type == 'facebookPage') {
                 Meteor.call('postOnFacebookPage', post);
+            }
+            if (service.type == 'facebookGroup') {
+                Meteor.call('postOnFacebookGroup', post);
+            }
+            if (service.type == 'pinterest') {
+                Meteor.call('postPin', post);
             }
             if (service.type == 'facebook') {
                 Meteor.call('postOnFacebook', post);

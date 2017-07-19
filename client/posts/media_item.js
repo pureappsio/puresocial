@@ -6,15 +6,21 @@ Template.mediaItem.helpers({
         if (type == 'facebook') {
             return 'Facebook';
         }
-        else if (type == 'facebookPage') {
-            return 'Facebook Page';
+        if (type == 'facebookGroup') {
+            return 'Facebook Group';
         }
-        else {
+        if (type == 'pinterest') {
+            return 'Pinterest';
+        } else if (type == 'facebookPage') {
+            return 'Facebook Page';
+        } else {
             return 'Twitter';
         }
     },
     displayName: function() {
+
         return Services.findOne(this._id).name;
+
     }
 
 });

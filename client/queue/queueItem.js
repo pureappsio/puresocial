@@ -39,10 +39,10 @@ Template.queueElement.helpers({
 
 Template.queueElement.events({
 
-    'click .post-queue': function(event, template) {
+    'click .post-queue': function() {
 
         // Store in DB
-        Meteor.call('postQueueItem', template.data, Meteor.user(), function(error, data) {
+        Meteor.call('postQueueItem', template.data, getUserId(), function(error, data) {
             console.log("Posted");
         });
 

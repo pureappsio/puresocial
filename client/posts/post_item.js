@@ -44,6 +44,20 @@ Template.postItem.helpers({
     getSocialMedia: function() {
         return [];
     },
+    isVideo: function() {
+
+        if ((this.content).includes('www.youtube.com/watch?v=')) {
+            return true;
+        }
+
+    },
+    videoLink: function() {
+
+        var videoId = youtube_parser(this.content);
+
+        return 'https://img.youtube.com/vi/' + videoId + '/maxresdefault.jpg';
+
+    },
     isPicturePresent: function() {
         if (this.picture) {
             return true;
@@ -52,3 +66,9 @@ Template.postItem.helpers({
         }
     }
 });
+
+function youtube_parser(url) {
+    var regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#\&\?]*).*/;
+    var match = url.match(regExp);
+    return (match && match[7].length == 11) ? match[7] : false;
+}
